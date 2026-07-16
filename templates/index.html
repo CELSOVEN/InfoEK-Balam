@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Inicio | Proyecto Flask
+{% endblock %}
+
+{% block content %}
+
+<section class="tarjeta">
+    <h2>Plantilla Flask funcionando</h2>
+
+    <p>
+        Esta aplicación está lista para comenzar un nuevo proyecto.
+    </p>
+</section>
+
+<section class="tarjeta">
+    <h2>Formulario de prueba</h2>
+
+    <form method="POST">
+        <div class="grupo-formulario">
+            <label for="dato">Dato de prueba:</label>
+
+            <input
+                type="text"
+                id="dato"
+                name="dato"
+                placeholder="Escribe un valor"
+                required
+            >
+        </div>
+
+        <button type="submit">
+            Procesar
+        </button>
+    </form>
+</section>
+
+{% if resultado %}
+
+<section class="tarjeta resultado">
+    <h2>Resultado</h2>
+
+    <p>{{ resultado.mensaje }}</p>
+
+    <pre>{{ resultado.datos_recibidos }}</pre>
+</section>
+
+{% endif %}
+
+{% endblock %}

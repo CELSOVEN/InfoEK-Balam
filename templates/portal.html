@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Portal | InfoEk-Balam
+{% endblock %}
+
+{% block content %}
+
+<section class="tarjeta">
+
+    <div class="portal-encabezado">
+        <div>
+            <h2>Portal InfoEk-Balam</h2>
+
+            <p>
+                Bienvenido,
+                {{ current_user.nombre }}.
+            </p>
+        </div>
+
+        <a
+            class="boton-secundario"
+            href="{{ url_for('logout') }}"
+        >
+            Cerrar sesión
+        </a>
+    </div>
+
+</section>
+
+<section class="tarjeta">
+
+    <h2>Información del campo</h2>
+
+    <p>
+        El portal está protegido y preparado para incorporar
+        el menú, los contenidos y la herramienta de búsqueda.
+    </p>
+
+</section>
+
+{% endblock %}

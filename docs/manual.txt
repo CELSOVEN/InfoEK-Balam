@@ -1,0 +1,19 @@
+Recuerda que debemos después de clonar el repositorio 
+
+Generar el entorno virtual con el comando
+python -m venv .venv
+
+Luego activar el entorno utilizando 
+.venv\Scripts\activate
+
+Luego vamos a instalar las librerías y requisitos del sistema
+Esto lo tenemos guardado dentro del archivo requirements.txt
+
+Por lo tanto vamos a utilizar
+
+pip install -r requirements.txt
+
+Luego verificamos esté bien instalado
+
+python app.py
+

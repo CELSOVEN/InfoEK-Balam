@@ -1,0 +1,42 @@
+# Git utiliza este archivo para saber qué carpetas 
+# y archivos debe ignorar durante el seguimiento de cambios.
+
+# Entorno virtual
+.venv/
+venv/
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Variables de entorno
+.env
+
+# Archivos de VS Code (opcionales)
+.vscode/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de JetBrains (opcional)
+.idea/
+
+# Office temporary files
+~$*
+
+#Presentación pdf y power point
+Calculadora_Python.pdf
+Calculadora_Python.pptx
+~$Calculadora_Python.pptx
+
+#Documentos que utilizo pero no requiero cargar
+docs/PYP-SM-EKBALAM-ENTREGABLES_OT1_08Jul26.docx
+docs/PYP-SM-EKBALAM-ENTREGABLES_OT1_08Jul26.pdf
+
+# Logs
+*.log
+
+# Environment variables
+.env

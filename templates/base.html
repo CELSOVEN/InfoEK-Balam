@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Aplicación web desarrollada con Python y Flask"
+    >
+
+    <title>
+        {% block title %}
+            Proyecto Flask
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    >
+</head>
+
+<body>
+    <header class="encabezado">
+        <div class="contenedor">
+            <h1>Proyecto Flask</h1>
+
+            <nav>
+                <a href="{{ url_for('inicio') }}">Inicio</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="contenedor contenido-principal">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <p>
+                Aplicación desarrollada con Python y Flask
+            </p>
+        </div>
+    </footer>
+
+    <script
+        src="{{ url_for('static', filename='js/scripts.js') }}"
+    ></script>
+</body>
+</html>

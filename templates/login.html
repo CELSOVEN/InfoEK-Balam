@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Acceso | InfoEk-Balam
+{% endblock %}
+
+{% block content %}
+
+<section class="login-contenedor">
+    <div class="login-tarjeta">
+
+        <h2>InfoEk-Balam</h2>
+
+        <p>
+            Portal de información técnica del campo Ek-Balam.
+        </p>
+
+        {% with mensajes = get_flashed_messages(
+            with_categories=true
+        ) %}
+
+            {% for categoria, mensaje in mensajes %}
+                <div class="alerta {{ categoria }}">
+                    {{ mensaje }}
+                </div>
+            {% endfor %}
+
+        {% endwith %}
+
+        <form method="POST">
+
+            <div class="grupo-formulario">
+                <label for="username">
+                    Usuario
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="grupo-formulario">
+                <label for="password">
+                    Contraseña
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Iniciar sesión
+            </button>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}
