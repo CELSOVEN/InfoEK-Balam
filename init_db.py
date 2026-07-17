@@ -37,8 +37,12 @@ def crear_usuario_administrador():
 
     if usuario:
 
+        usuario.establecer_password(admin_password)
+
+        db.session.commit()
+
         print(
-            "✓ El usuario administrador ya existe."
+            "✓ Contraseña del administrador actualizada."
         )
 
         return
