@@ -653,6 +653,13 @@ pre {
     .indicador { min-width: 0; padding: 18px; }
     .rejilla-contenidos,
     .distribucion-portal { grid-template-columns: 1fr; }
+
+    .menu-lateral {
+        position: static;
+        top: auto;
+        width: 100%;
+    }
+
     .tarjeta-contenido { padding: 20px; }
 }
 
