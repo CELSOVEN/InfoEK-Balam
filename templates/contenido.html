@@ -21,7 +21,7 @@
                     href="{{ url_for(
                         'ver_contenido',
                         slug=elemento.slug
-                    ) }}"
+                    ) }}#contenido-principal"
                     class="{% if elemento.id == contenido.id %}
                         activo
                     {% endif %}"
@@ -41,7 +41,10 @@
 
     </aside>
 
-    <article class="contenido-documental">
+<article
+    id="contenido-principal"
+    class="contenido-documental"
+>
 
         <span class="categoria">
             {{ contenido.categoria }}
