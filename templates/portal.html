@@ -64,7 +64,14 @@
         </span>
     </article>
 
-    <article class="indicador">
+    <article
+        class="indicador indicador-interactivo"
+        role="button"
+        tabindex="0"
+        aria-haspopup="dialog"
+        aria-controls="modal-plataformas"
+        data-abrir-modal="modal-plataformas"
+    >
         <span class="indicador-numero">
             11
         </span>
@@ -74,7 +81,14 @@
         </span>
     </article>
 
-    <article class="indicador">
+    <article
+        class="indicador indicador-interactivo"
+        role="button"
+        tabindex="0"
+        aria-haspopup="dialog"
+        aria-controls="modal-ductos"
+        data-abrir-modal="modal-ductos"
+    >
         <span class="indicador-numero">
             10
         </span>
@@ -94,6 +108,78 @@
         </span>
     </article>
 </section>
+
+<dialog
+    class="modal-plataformas"
+    id="modal-plataformas"
+    aria-labelledby="titulo-modal-plataformas"
+>
+    <div class="modal-plataformas-encabezado">
+        <div>
+            <p class="etiqueta">UBICACI&Oacute;N</p>
+            <h2 id="titulo-modal-plataformas">Plataformas del campo Ek-Balam</h2>
+        </div>
+
+        <button
+            type="button"
+            class="cerrar-modal-plataformas"
+            aria-label="Cerrar ventana"
+            data-cerrar-modal
+        >
+            &times;
+        </button>
+    </div>
+
+    <div class="modal-plataformas-contenido">
+        <img
+            src="{{ url_for('static', filename='img/plataformas-web.webp') }}"
+            alt="Diagrama de ubicaci&oacute;n de las once plataformas del campo Ek-Balam"
+            class="imagen-plataformas imagen-mapa-plataformas"
+        >
+
+        <img
+            src="{{ url_for('static', filename='img/Tabla_plataformas.png') }}"
+            alt="Tabla con el servicio y nombre de las once plataformas"
+            class="imagen-plataformas imagen-tabla-plataformas"
+        >
+    </div>
+</dialog>
+
+<dialog
+    class="modal-plataformas"
+    id="modal-ductos"
+    aria-labelledby="titulo-modal-ductos"
+>
+    <div class="modal-plataformas-encabezado">
+        <div>
+            <p class="etiqueta">INFRAESTRUCTURA</p>
+            <h2 id="titulo-modal-ductos">Ductos identificados</h2>
+        </div>
+
+        <button
+            type="button"
+            class="cerrar-modal-plataformas"
+            aria-label="Cerrar ventana"
+            data-cerrar-modal
+        >
+            &times;
+        </button>
+    </div>
+
+    <div class="modal-plataformas-contenido">
+        <img
+            src="{{ url_for('static', filename='img/ductos-sin-tabla-web.webp') }}"
+            alt="Diagrama de ubicaci&oacute;n y recorrido de los ductos del campo Ek-Balam"
+            class="imagen-plataformas imagen-mapa-plataformas"
+        >
+
+        <img
+            src="{{ url_for('static', filename='img/tabla-ductos-web.webp') }}"
+            alt="Tabla con informaci&oacute;n de los diez ductos identificados"
+            class="imagen-plataformas imagen-tabla-plataformas"
+        >
+    </div>
+</dialog>
 
 <section class="seccion-contenidos">
     <div class="titulo-seccion">

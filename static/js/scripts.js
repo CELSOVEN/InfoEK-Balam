@@ -27,4 +27,29 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => {
         if (window.innerWidth > 760) cerrarMenu();
     });
+
+    document.querySelectorAll("[data-abrir-modal]").forEach((activador) => {
+        const modal = document.getElementById(activador.dataset.abrirModal);
+        if (!modal) return;
+
+        const mostrarModal = () => modal.showModal();
+
+        activador.addEventListener("click", mostrarModal);
+        activador.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                mostrarModal();
+            }
+        });
+    });
+
+    document.querySelectorAll("[data-cerrar-modal]").forEach((boton) => {
+        boton.addEventListener("click", () => boton.closest("dialog").close());
+    });
+
+    document.querySelectorAll("dialog.modal-plataformas").forEach((modal) => {
+        modal.addEventListener("click", (evento) => {
+            if (evento.target === modal) modal.close();
+        });
+    });
 });
