@@ -43,22 +43,24 @@ body {
 }
 
 .encabezado {
-    padding: 18px 0;
-
+    position: fixed;  /* Mantiene el encabezado fijo en la parte superior de la página */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 8px 0;
     color: var(--blanco);
-
     background:
         linear-gradient(
             100deg,
-            var(--rojo-oscuro) 0%,
-            var(--rojo-principal) 55%,
-            #bd252b 100%
+            var(--rojo-oscuro),
+            var(--rojo-principal)
         );
-
-    border-bottom: 4px solid var(--gris-oscuro);
-
-    box-shadow: 0 3px 12px rgb(0 0 0 / 22%);
+    border-bottom: 3px solid var(--gris-oscuro);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
 }
+
+
 .encabezado a,
 .nombre-portal,
 .navegacion-principal a {
