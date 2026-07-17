@@ -6,37 +6,133 @@
 
 {% block content %}
 
-<section class="tarjeta">
+<section class="portal-bienvenida">
+    <div>
+        <p class="etiqueta">PORTAL TÉCNICO</p>
 
-    <div class="portal-encabezado">
-        <div>
-            <h2>Portal InfoEk-Balam</h2>
+        <h2>Información del campo Ek-Balam</h2>
 
-            <p>
-                Bienvenido,
-                {{ current_user.nombre }}.
-            </p>
-        </div>
-
-        <a
-            class="boton-secundario"
-            href="{{ url_for('logout') }}"
-        >
-            Cerrar sesión
-        </a>
+        <p>
+            Bienvenido, {{ current_user.nombre }}.
+            Consulta la información por sección o utiliza
+            el buscador.
+        </p>
     </div>
 
+    <a
+        class="boton-secundario"
+        href="{{ url_for('logout') }}"
+    >
+        Cerrar sesión
+    </a>
 </section>
 
-<section class="tarjeta">
+<section class="buscador-principal">
+    <form
+        action="{{ url_for('buscar') }}"
+        method="GET"
+    >
+        <label
+            class="visualmente-oculto"
+            for="busqueda"
+        >
+            Buscar información
+        </label>
 
-    <h2>Información del campo</h2>
+        <input
+            type="search"
+            id="busqueda"
+            name="q"
+            placeholder="Buscar plataforma, pozo, producción, plano..."
+            required
+        >
 
-    <p>
-        El portal está protegido y preparado para incorporar
-        el menú, los contenidos y la herramienta de búsqueda.
-    </p>
+        <button type="submit">
+            Buscar
+        </button>
+    </form>
+</section>
 
+<section class="indicadores">
+    <article class="indicador">
+        <span class="indicador-numero">
+            {{ total_secciones }}
+        </span>
+
+        <span class="indicador-texto">
+            Secciones disponibles
+        </span>
+    </article>
+
+    <article class="indicador">
+        <span class="indicador-numero">
+            11
+        </span>
+
+        <span class="indicador-texto">
+            Plataformas activas
+        </span>
+    </article>
+
+    <article class="indicador">
+        <span class="indicador-numero">
+            10
+        </span>
+
+        <span class="indicador-texto">
+            Ductos identificados
+        </span>
+    </article>
+
+    <article class="indicador">
+        <span class="indicador-numero">
+            36
+        </span>
+
+        <span class="indicador-texto">
+            Pozos reportados
+        </span>
+    </article>
+</section>
+
+<section class="seccion-contenidos">
+    <div class="titulo-seccion">
+        <div>
+            <p class="etiqueta">DATA ROOM</p>
+            <h2>Contenido técnico</h2>
+        </div>
+    </div>
+
+    <div class="rejilla-contenidos">
+
+        {% for contenido in contenidos %}
+
+            <article class="tarjeta-contenido">
+                <span class="categoria">
+                    {{ contenido.categoria }}
+                </span>
+
+                <h3>
+                    {{ contenido.titulo }}
+                </h3>
+
+                <p>
+                    {{ contenido.resumen }}
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'ver_contenido',
+                        slug=contenido.slug
+                    ) }}"
+                >
+                    Consultar información →
+                </a>
+            </article>
+
+        {% endfor %}
+
+    </div>
 </section>
 
 {% endblock %}

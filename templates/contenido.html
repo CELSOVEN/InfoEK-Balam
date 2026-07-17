@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ contenido.titulo }} | InfoEk-Balam
+{% endblock %}
+
+{% block content %}
+
+<div class="distribucion-portal">
+
+    <aside class="menu-lateral">
+
+        <div class="menu-lateral-titulo">
+            <span>Contenido</span>
+        </div>
+
+        <nav>
+            {% for elemento in contenidos_menu %}
+
+                <a
+                    href="{{ url_for(
+                        'ver_contenido',
+                        slug=elemento.slug
+                    ) }}"
+                    class="{% if elemento.id == contenido.id %}
+                        activo
+                    {% endif %}"
+                >
+                    {{ elemento.titulo }}
+                </a>
+
+            {% endfor %}
+        </nav>
+
+        <a
+            class="volver-portal"
+            href="{{ url_for('portal') }}"
+        >
+            ← Regresar al portal
+        </a>
+
+    </aside>
+
+    <article class="contenido-documental">
+
+        <span class="categoria">
+            {{ contenido.categoria }}
+        </span>
+
+        <h1>
+            {{ contenido.titulo }}
+        </h1>
+
+        <p class="resumen-contenido">
+            {{ contenido.resumen }}
+        </p>
+
+        <div class="texto-contenido">
+            {% for parrafo in contenido.contenido.split('\n\n') %}
+
+                {% if parrafo.strip() %}
+                    <p>{{ parrafo.strip() }}</p>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+
+    </article>
+
+</div>
+
+{% endblock %}

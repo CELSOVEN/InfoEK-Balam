@@ -1,5 +1,7 @@
 import os
 
+from models import Contenido, Usuario
+
 from flask import (
     Flask,
     flash,
@@ -90,7 +92,76 @@ def login():
 @app.route("/portal")
 @login_required
 def portal():
-    return render_template("portal.html")
+    contenidos = (
+        Contenido.query
+        .filter_by(activo=True)
+        .order_by(Contenido.orden)
+        .all()
+    )
+
+    total_secciones = len(contenidos)
+
+    return render_template(
+        "portal.html",
+        contenidos=contenidos,
+        total_secciones=total_secciones
+    )
+
+@app.route("/contenido/<string:slug>")
+@login_required
+def ver_contenido(slug):
+    contenido = Contenido.query.filter_by(
+        slug=slug,
+        activo=True
+    ).first_or_404()
+
+    contenidos_menu = (
+        Contenido.query
+        .filter_by(activo=True)
+        .order_by(Contenido.orden)
+        .all()
+    )
+
+    return render_template(
+        "contenido.html",
+        contenido=contenido,
+        contenidos_menu=contenidos_menu
+    )
+
+@app.route("/buscar")
+@login_required
+def buscar():
+    termino = request.args.get(
+        "q",
+        ""
+    ).strip()
+
+    resultados = []
+
+    if termino:
+        patron = f"%{termino}%"
+
+        resultados = (
+            Contenido.query
+            .filter(
+                Contenido.activo.is_(True),
+                db.or_(
+                    Contenido.titulo.ilike(patron),
+                    Contenido.categoria.ilike(patron),
+                    Contenido.resumen.ilike(patron),
+                    Contenido.contenido.ilike(patron),
+                    Contenido.palabras_clave.ilike(patron),
+                )
+            )
+            .order_by(Contenido.orden)
+            .all()
+        )
+
+    return render_template(
+        "busqueda.html",
+        termino=termino,
+        resultados=resultados
+    )
 
 
 @app.route("/logout")

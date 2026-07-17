@@ -17,3 +17,6 @@ Luego verificamos esté bien instalado
 
 python app.py
 
+usuario: admin
+password: EKBALAM
+

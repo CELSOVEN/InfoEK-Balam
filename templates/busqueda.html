@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Búsqueda | InfoEk-Balam
+{% endblock %}
+
+{% block content %}
+
+<section class="pagina-busqueda">
+
+    <a
+        class="volver-portal"
+        href="{{ url_for('portal') }}"
+    >
+        ← Regresar al portal
+    </a>
+
+    <h1>Buscar información</h1>
+
+    <form
+        class="formulario-busqueda"
+        action="{{ url_for('buscar') }}"
+        method="GET"
+    >
+        <input
+            type="search"
+            name="q"
+            value="{{ termino }}"
+            placeholder="Escribe una palabra o concepto"
+            required
+        >
+
+        <button type="submit">
+            Buscar
+        </button>
+    </form>
+
+    {% if termino %}
+
+        <div class="encabezado-resultados">
+            <h2>
+                Resultados para “{{ termino }}”
+            </h2>
+
+            <p>
+                {{ resultados|length }}
+                coincidencia(s) encontrada(s).
+            </p>
+        </div>
+
+        {% if resultados %}
+
+            <div class="lista-resultados">
+
+                {% for resultado in resultados %}
+
+                    <article class="resultado-busqueda">
+                        <span class="categoria">
+                            {{ resultado.categoria }}
+                        </span>
+
+                        <h3>
+                            <a
+                                href="{{ url_for(
+                                    'ver_contenido',
+                                    slug=resultado.slug
+                                ) }}"
+                            >
+                                {{ resultado.titulo }}
+                            </a>
+                        </h3>
+
+                        <p>
+                            {{ resultado.resumen }}
+                        </p>
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="sin-resultados">
+                <h3>No encontramos coincidencias</h3>
+
+                <p>
+                    Prueba con términos como plataforma,
+                    producción, Balam-TB, pozos, P&amp;ID o
+                    mantenimiento.
+                </p>
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

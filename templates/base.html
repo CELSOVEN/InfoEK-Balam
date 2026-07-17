@@ -28,10 +28,16 @@
 <body>
     <header class="encabezado">
         <div class="contenedor">
-            <h1>Proyecto Flask</h1>
+           <h1>
+    <a href="{{ url_for('inicio') }}">
+        InfoEk-Balam
+    </a>
+</h1>
 
             <nav>
-                <a href="{{ url_for('inicio') }}">Inicio</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('portal') }}">Portal</a>
+                {% endif %}
             </nav>
         </div>
     </header>
@@ -44,7 +50,7 @@
     <footer class="pie-pagina">
         <div class="contenedor">
             <p>
-                Aplicación desarrollada con Python y Flask
+                InfoEk-Balam · Portal de información técnica
             </p>
         </div>
     </footer>
