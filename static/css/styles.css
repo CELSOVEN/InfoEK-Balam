@@ -399,6 +399,15 @@ pre {
     height: auto;
 }
 
+.imagen-mapa-plataformas {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    object-fit: contain;
+}
+
 .imagen-plataformas-completa {
     grid-column: 1 / -1;
     margin-top: 8px;
