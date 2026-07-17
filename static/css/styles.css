@@ -172,17 +172,7 @@ pre {
     border-top: 4px solid var(--rojo-principal);
 }
 
-@media (max-width: 650px) {
-    .encabezado .contenedor {
-        scroll-margin-top: 155px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
 
-    .tarjeta {
-        padding: 20px;
-    }
-}
 
 #Nueva
 
@@ -497,37 +487,6 @@ pre {
     border: 0;
 }
 
-@media (max-width: 900px) {
-    .indicadores,
-    .rejilla-contenidos {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .distribucion-portal {
-        grid-template-columns: 1fr;
-    }
-
-    .menu-lateral {
-        position: static;
-    }
-}
-
-@media (max-width: 600px) {
-    .portal-bienvenida {
-        flex-direction: column;
-    }
-
-    .indicadores,
-    .rejilla-contenidos {
-        grid-template-columns: 1fr;
-    }
-
-    .buscador-principal form,
-    .formulario-busqueda {
-        flex-direction: column;
-    }
-}
-
 .encabezado-contenido {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -590,34 +549,53 @@ pre {
     color:#f2d4d4;
 }
 
-
 @media (max-width: 760px) {
+
+    .encabezado {
+        padding: 6px 0;
+    }
+
     .encabezado-contenido {
-        grid-template-columns: 1fr auto;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
         gap: 10px;
+        min-height: 48px;
     }
 
     .grupo-logos {
-        grid-column: 1 / -1;
-        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 7px;
     }
 
     .logo-pypsa {
-        max-width: 125px;
-        max-height: 50px;
+        max-width: 66px;
+        max-height: 25px;
     }
 
     .logo-sierramadre {
-        max-width: 125px;
-        max-height: 70px;
+        max-width: 42px;
+        max-height: 29px;
     }
 
     .separador-logos {
-        height: 34px;
+        height: 24px;
     }
 
     .nombre-portal {
-        font-size: 1.2rem;
+        font-size: 0.9rem;
+        line-height: 1.1;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .navegacion-principal {
+        display: none;
+    }
+
+    .contenido-principal {
+        padding-top: 66px;
     }
 }
 
