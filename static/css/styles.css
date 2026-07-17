@@ -609,6 +609,38 @@ pre {
     text-decoration: none;
 }
 
+.resultado-plataforma {
+    display: grid;
+    gap: 18px;
+}
+
+.resultado-plataforma > h3,
+.resultado-plataforma > p {
+    margin: 0;
+}
+
+.resultado-plataforma-imagen {
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 8px;
+}
+
+.resultado-plataforma-imagen figcaption {
+    padding: 12px 16px;
+    color: var(--blanco);
+    font-weight: 700;
+    background: var(--gris-oscuro);
+}
+
+.resultado-plataforma-imagen img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .sin-resultados {
     margin-top: 30px;
     padding: 24px;

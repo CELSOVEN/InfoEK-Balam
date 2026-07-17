@@ -1,4 +1,5 @@
 import os
+import re
 
 from models import Contenido, Usuario
 
@@ -25,6 +26,61 @@ from models import Usuario
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+
+PLATAFORMAS_BUSQUEDA = {
+    "EK-A": {
+        "nombre": "EK-A",
+        "imagen": "01_EK-A.png",
+    },
+    "BALAM-TB": {
+        "nombre": "Balam-TB",
+        "imagen": "02_BALAM-TB.png",
+    },
+    "BALAM-A": {
+        "nombre": "Balam-A",
+        "imagen": "03_BALAM-A.png",
+    },
+    "EK-A2": {
+        "nombre": "EK-A2",
+        "imagen": "04_EK-A2.png",
+    },
+    "EK-TA": {
+        "nombre": "EK-TA",
+        "imagen": "05_EK-TA.png",
+    },
+    "BALAM-TE": {
+        "nombre": "Balam-TE",
+        "imagen": "06_BALAM-TE.png",
+    },
+    "BALAM-TA": {
+        "nombre": "Balam-TA",
+        "imagen": "07_BALAM-TA.png",
+    },
+    "BALAM-TA2": {
+        "nombre": "Balam-TA2",
+        "imagen": "08_BALAM-TA2.png",
+    },
+    "EK-TB": {
+        "nombre": "EK-TB",
+        "imagen": "09_EK-TB.png",
+    },
+    "BALAM-TD": {
+        "nombre": "Balam-TD",
+        "imagen": "10_BALAM-TD.png",
+    },
+}
+
+
+def buscar_plataforma(termino):
+    termino_normalizado = termino.upper().replace("_", "-")
+
+    for clave in sorted(PLATAFORMAS_BUSQUEDA, key=len, reverse=True):
+        patron = rf"(?<![A-Z0-9]){re.escape(clave)}(?![A-Z0-9])"
+        if re.search(patron, termino_normalizado):
+            return PLATAFORMAS_BUSQUEDA[clave]
+
+    return None
 
 db.init_app(app)
 
@@ -137,8 +193,10 @@ def buscar():
     ).strip()
 
     resultados = []
+    resultado_plataforma = None
 
     if termino:
+        resultado_plataforma = buscar_plataforma(termino)
         patron = f"%{termino}%"
 
         resultados = (
@@ -160,7 +218,8 @@ def buscar():
     return render_template(
         "busqueda.html",
         termino=termino,
-        resultados=resultados
+        resultados=resultados,
+        resultado_plataforma=resultado_plataforma,
     )
 
 

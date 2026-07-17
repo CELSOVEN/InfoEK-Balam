@@ -43,14 +43,49 @@
             </h2>
 
             <p>
-                {{ resultados|length }}
+                {{ resultados|length + (1 if resultado_plataforma else 0) }}
                 coincidencia(s) encontrada(s).
             </p>
         </div>
 
-        {% if resultados %}
+        {% if resultados or resultado_plataforma %}
 
             <div class="lista-resultados">
+
+                {% if resultado_plataforma %}
+                    <article class="resultado-busqueda resultado-plataforma">
+                        <span class="categoria">Plataforma</span>
+
+                        <h3>
+                            Informaci&oacute;n de la plataforma
+                            {{ resultado_plataforma.nombre }}
+                        </h3>
+
+                        <p>
+                            Tabla general de plataformas y ficha de los pozos
+                            asociados a {{ resultado_plataforma.nombre }}.
+                        </p>
+
+                        <figure class="resultado-plataforma-imagen">
+                            <figcaption>Tabla general de plataformas</figcaption>
+                            <img
+                                src="{{ url_for('static', filename='img/tabla_plataformas_pozos.png') }}"
+                                alt="Tabla general de plataformas y pozos del campo Ek-Balam"
+                            >
+                        </figure>
+
+                        <figure class="resultado-plataforma-imagen">
+                            <figcaption>
+                                Pozos de la plataforma
+                                {{ resultado_plataforma.nombre }}
+                            </figcaption>
+                            <img
+                                src="{{ url_for('static', filename='img/plataformas_pozos/' ~ resultado_plataforma.imagen) }}"
+                                alt="Informaci&oacute;n de pozos de la plataforma {{ resultado_plataforma.nombre }}"
+                            >
+                        </figure>
+                    </article>
+                {% endif %}
 
                 {% for resultado in resultados %}
 
