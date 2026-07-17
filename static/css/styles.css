@@ -399,6 +399,31 @@ pre {
     height: auto;
 }
 
+.imagen-plataformas-completa {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+}
+
+.modal-pozos-contenido {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.detalle-pozos {
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 8px;
+}
+
+.detalle-pozos figcaption {
+    padding: 12px 16px;
+    color: var(--blanco);
+    font-weight: 700;
+    background: var(--gris-oscuro);
+}
+
 .titulo-seccion {
     margin-bottom: 18px;
 }

@@ -98,7 +98,14 @@
         </span>
     </article>
 
-    <article class="indicador">
+    <article
+        class="indicador indicador-interactivo"
+        role="button"
+        tabindex="0"
+        aria-haspopup="dialog"
+        aria-controls="modal-pozos"
+        data-abrir-modal="modal-pozos"
+    >
         <span class="indicador-numero">
             36
         </span>
@@ -135,6 +142,12 @@
             src="{{ url_for('static', filename='img/plataformas-web.webp') }}"
             alt="Diagrama de ubicaci&oacute;n de las once plataformas del campo Ek-Balam"
             class="imagen-plataformas imagen-mapa-plataformas"
+        >
+
+        <img
+            src="{{ url_for('static', filename='img/tabla_plataformas_pozos.png') }}"
+            alt="Tabla de plataformas y pozos del campo Ek-Balam"
+            class="imagen-plataformas imagen-plataformas-completa"
         >
 
         <img
@@ -178,6 +191,55 @@
             alt="Tabla con informaci&oacute;n de los diez ductos identificados"
             class="imagen-plataformas imagen-tabla-plataformas"
         >
+    </div>
+</dialog>
+
+<dialog
+    class="modal-plataformas"
+    id="modal-pozos"
+    aria-labelledby="titulo-modal-pozos"
+>
+    <div class="modal-plataformas-encabezado">
+        <div>
+            <p class="etiqueta">INFORMACI&Oacute;N DE POZOS</p>
+            <h2 id="titulo-modal-pozos">Pozos reportados por plataforma</h2>
+        </div>
+
+        <button
+            type="button"
+            class="cerrar-modal-plataformas"
+            aria-label="Cerrar ventana"
+            data-cerrar-modal
+        >
+            &times;
+        </button>
+    </div>
+
+    <div class="modal-plataformas-contenido modal-pozos-contenido">
+        {% set imagenes_pozos = [
+            ('01_EK-A.png', 'Plataforma EK-A'),
+            ('02_BALAM-TB.png', 'Plataforma Balam-TB'),
+            ('03_BALAM-A.png', 'Plataforma Balam-A'),
+            ('04_EK-A2.png', 'Plataforma EK-A2'),
+            ('05_EK-TA.png', 'Plataforma EK-TA'),
+            ('06_BALAM-TE.png', 'Plataforma Balam-TE'),
+            ('07_BALAM-TA.png', 'Plataforma Balam-TA'),
+            ('08_BALAM-TA2.png', 'Plataforma Balam-TA2'),
+            ('09_EK-TB.png', 'Plataforma EK-TB'),
+            ('10_BALAM-TD.png', 'Plataforma Balam-TD')
+        ] %}
+
+        {% for archivo, plataforma in imagenes_pozos %}
+            <figure class="detalle-pozos">
+                <figcaption>{{ plataforma }}</figcaption>
+                <img
+                    src="{{ url_for('static', filename='img/plataformas_pozos/' ~ archivo) }}"
+                    alt="Informaci&oacute;n de pozos de {{ plataforma }}"
+                    class="imagen-plataformas"
+                    loading="lazy"
+                >
+            </figure>
+        {% endfor %}
     </div>
 </dialog>
 
