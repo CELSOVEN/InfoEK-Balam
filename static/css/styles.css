@@ -60,15 +60,17 @@ body {
     box-shadow: 0 2px 7px rgba(134, 134, 134, 0.2);
 }
 
-
-.encabezado a,
-.nombre-portal,
-
-.encabezado .contenedor {
+.encabezado .contenedor,
+.encabezado-contenido {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+}
+
+.encabezado a {
+    color: white;
+    text-decoration: none;
 }
 
 .encabezado h1 {
@@ -548,7 +550,6 @@ pre {
 .navegacion-principal a:hover{
     color:#f2d4d4;
 }
-
 @media (max-width: 760px) {
 
     .encabezado {
@@ -557,37 +558,40 @@ pre {
 
     .encabezado-contenido {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         gap: 10px;
-        min-height: 48px;
+        min-height: 52px;
     }
 
     .grupo-logos {
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 6px;
+        min-width: 0;
     }
 
     .logo-pypsa {
-        max-width: 66px;
-        max-height: 25px;
+        max-width: 58px;
+        max-height: 24px;
     }
 
     .logo-sierramadre {
-        max-width: 42px;
-        max-height: 29px;
+        max-width: 38px;
+        max-height: 28px;
     }
 
     .separador-logos {
-        height: 24px;
+        height: 22px;
     }
 
     .nombre-portal {
-        font-size: 0.9rem;
-        line-height: 1.1;
-        text-align: center;
-        white-space: nowrap;
+        min-width: 0;
+        font-size: 0.82rem;
+        line-height: 1.15;
+        text-align: left;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .navegacion-principal {
@@ -595,7 +599,7 @@ pre {
     }
 
     .contenido-principal {
-        padding-top: 66px;
+        padding-top: 76px;
     }
 }
 

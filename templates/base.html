@@ -58,6 +58,16 @@
             Info. Ek-Balam
         </a>
 
+        <button
+            type="button"
+            class="boton-menu-movil"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+
+
     <nav class="navegacion-principal">
 
         <a href="{{ url_for('portal') }}">
@@ -70,6 +80,20 @@
             ES | EN
         </a>
     </nav>
+
+    <nav class="menu-movil">
+    <a href="{{ url_for('portal') }}">
+        Home
+    </a>
+
+    <a href="{{ url_for('buscar') }}">
+        Buscar
+    </a>
+
+    <a href="#">
+        ES | EN
+    </a>
+</nav>
 
 
         </div>
