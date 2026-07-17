@@ -10,12 +10,12 @@
 
     <meta
         name="description"
-        content="Aplicación web desarrollada con Python y Flask"
+        content="Información técnica del campo Ek-Balam"
     >
 
     <title>
         {% block title %}
-            Proyecto Flask
+            Recopilación de información del campo EK-Balam
         {% endblock %}
     </title>
 
@@ -55,16 +55,22 @@
             href="{{ url_for('inicio') }}"
             class="nombre-portal"
         >
-            InfoEk-Balam
+            Info. Ek-Balam
         </a>
 
-        <nav class="navegacion-principal">
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('portal') }}">
-                    Portal
-                </a>
-            {% endif %}
-        </nav>
+    <nav class="navegacion-principal">
+
+        <a href="{{ url_for('portal') }}">
+            Home
+        </a>
+        <a href="#">
+            Buscar
+        </a>
+        <a href="#">
+            ES | EN
+        </a>
+    </nav>
+
 
         </div>
     </header>

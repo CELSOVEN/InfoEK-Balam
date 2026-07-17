@@ -173,7 +173,6 @@ def logout():
         "La sesión se cerró correctamente.",
         "success"
     )
-
     return redirect(url_for("login"))
 
 
