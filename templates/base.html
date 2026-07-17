@@ -63,6 +63,7 @@
             class="boton-menu-movil"
             aria-label="Abrir menú"
             aria-expanded="false"
+            aria-controls="menu-movil"
         >
             ☰
         </button>
@@ -81,7 +82,7 @@
         </a>
     </nav>
 
-    <nav class="menu-movil">
+    <nav class="menu-movil" id="menu-movil">
     <a href="{{ url_for('portal') }}">
         Home
     </a>
