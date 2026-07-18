@@ -34,6 +34,19 @@ class Usuario(UserMixin, db.Model):
         nullable=False
     )
 
+    def establecer_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verificar_password(self, password):
+        return check_password_hash(
+            self.password_hash,
+            password
+        )
+
+    @property
+    def is_active(self):
+        return self.activo
+
 
 class Pozo(db.Model):
     __tablename__ = "pozos"
@@ -124,20 +137,6 @@ class Pozo(db.Model):
         default=True,
         nullable=False
     )
-
-    def establecer_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verificar_password(self, password):
-        return check_password_hash(
-            self.password_hash,
-            password
-        )
-
-    @property
-    def is_active(self):
-        return self.activo
-
 
 class Contenido(db.Model):
     __tablename__ = "contenidos"

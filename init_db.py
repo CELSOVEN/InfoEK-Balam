@@ -43,7 +43,7 @@ def crear_usuario_administrador():
         db.session.commit()
 
         print(
-            "✓ Contraseña del administrador actualizada."
+            "[OK] Contraseña del administrador actualizada."
         )
 
         return
@@ -61,7 +61,7 @@ def crear_usuario_administrador():
     db.session.commit()
 
     print(
-        "✓ Usuario administrador creado correctamente."
+        "[OK] Usuario administrador creado correctamente."
     )
 
 
@@ -91,11 +91,11 @@ def cargar_contenidos():
     db.session.commit()
 
     print(
-        f"✓ Nuevos contenidos agregados: {nuevos}"
+        f"[OK] Nuevos contenidos agregados: {nuevos}"
     )
 
     print(
-        f"✓ Total de contenidos: {Contenido.query.count()}"
+        f"[OK] Total de contenidos: {Contenido.query.count()}"
     )
 
 
@@ -106,13 +106,19 @@ def cargar_pozos():
 
     nuevos = 0
 
+    existentes = {
+        pozo.pozos.strip().lower(): pozo
+        for pozo in Pozo.query.all()
+        if pozo.pozos
+    }
+
     for datos in POZOS_INICIALES:
+        identificador = datos["pozos"].strip().lower()
+        pozo = existentes.get(identificador)
 
-        existe = Pozo.query.filter_by(
-            nombre=datos["nombre"]
-        ).first()
-
-        if existe:
+        if pozo is not None:
+            for campo, valor in datos.items():
+                setattr(pozo, campo, valor)
             continue
 
         pozo = Pozo(**datos)
@@ -124,11 +130,11 @@ def cargar_pozos():
     db.session.commit()
 
     print(
-        f"✓ Nuevos pozos agregados: {nuevos}"
+        f"[OK] Nuevos pozos agregados: {nuevos}"
     )
 
     print(
-        f"✓ Total de pozos: {Pozo.query.count()}"
+        f"[OK] Total de pozos: {Pozo.query.count()}"
     )
 
 
@@ -157,7 +163,7 @@ def inicializar_base_datos():
         cargar_pozos()
 
         print(
-            "\n✓ Base de datos lista.\n"
+            "\n[OK] Base de datos lista.\n"
         )
 
 

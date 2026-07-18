@@ -3,10 +3,16 @@ services:
     name: info-ek-balam
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python -m gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 app:app
+    startCommand: python init_db.py && python -m gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 app:app
     healthCheckPath: /health
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: FLASK_DEBUG
         value: "False"
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_NAME
+        value: Administrador
+      - key: ADMIN_PASSWORD
+        sync: false
