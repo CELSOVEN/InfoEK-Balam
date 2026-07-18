@@ -1,0 +1,55 @@
+{% macro explorador_pozos(pozos_por_plataforma, prefijo) %}
+    {% if pozos_por_plataforma %}
+        <section class="explorador-pozos" aria-labelledby="{{ prefijo }}-titulo-explorador-pozos" data-explorador-pozos>
+            <div class="explorador-pozos-encabezado">
+                <div>
+                    <span class="categoria">Base de datos</span>
+                    <h2 id="{{ prefijo }}-titulo-explorador-pozos">Pozos por plataforma</h2>
+                    <p>Selecciona una plataforma para consultar la información de sus pozos.</p>
+                </div>
+
+                <div class="selector-plataforma">
+                    <label for="{{ prefijo }}-plataforma-pozos">Plataforma</label>
+                    <select id="{{ prefijo }}-plataforma-pozos" data-selector-plataforma>
+                        <option value="">Selecciona una plataforma</option>
+                        {% for plataforma, pozos in pozos_por_plataforma.items() %}
+                            <option value="{{ loop.index }}">{{ plataforma }} ({{ pozos|length }} pozos)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <p class="estado-plataforma-pozos" aria-live="polite" data-estado-plataforma>
+                Elige una plataforma para mostrar sus pozos.
+            </p>
+
+            {% for plataforma, pozos in pozos_por_plataforma.items() %}
+                <div class="grupo-pozos-plataforma" data-grupo-plataforma="{{ loop.index }}" data-plataforma="{{ plataforma }}" hidden>
+                    <h3>{{ plataforma }}</h3>
+                    <div class="rejilla-pozos">
+                        {% for pozo in pozos %}
+                            <article class="ficha-pozo">
+                                <div class="ficha-pozo-titulo">
+                                    <span>{{ pozo.pozos }}</span>
+                                    <small>{{ pozo.tipo_perforacion or 'Sin tipo de perforación' }}</small>
+                                </div>
+                                <dl>
+                                    <div><dt>Nombre</dt><dd>{{ pozo.nombre }}</dd></div>
+                                    <div><dt>Instalación</dt><dd>{{ pozo.fecha_instalacion or 'No disponible' }}</dd></div>
+                                    <div><dt>Tipo</dt><dd>{{ pozo.tipo or 'No disponible' }}</dd></div>
+                                    <div><dt>Servicio</dt><dd>{{ pozo.servicio or 'No disponible' }}</dd></div>
+                                    <div><dt>Profundidad de agua</dt><dd>{{ pozo.profundidad_agua or 'No disponible' }}{% if pozo.profundidad_agua %} m{% endif %}</dd></div>
+                                    <div><dt>Coordenadas UTM</dt><dd>{{ pozo.coordenadas_utm or 'No disponibles' }}</dd></div>
+                                    <div><dt>Inicio de perforación</dt><dd>{{ pozo.inicio_perforacion or 'No disponible' }}</dd></div>
+                                    <div><dt>Fin de perforación</dt><dd>{{ pozo.fin_perforacion or 'No disponible' }}</dd></div>
+                                    <div><dt>Profundidad total</dt><dd>{{ pozo.profundidad_total or 'No disponible' }}{% if pozo.profundidad_total %} m{% endif %}</dd></div>
+                                    <div><dt>Profundidad vertical</dt><dd>{{ pozo.profundidad_vertical or 'No disponible' }}{% if pozo.profundidad_vertical %} m{% endif %}</dd></div>
+                                </dl>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
+{% endmacro %}

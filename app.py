@@ -85,16 +85,41 @@ def buscar_plataforma(termino):
     return None
 
 
+def obtener_pozos_por_plataforma():
+    pozos_por_plataforma = {}
+    pozos = (
+        Pozo.query
+        .filter_by(activo=True)
+        .order_by(Pozo.plataforma, Pozo.pozos)
+        .all()
+    )
+
+    for pozo in pozos:
+        pozos_por_plataforma.setdefault(
+            pozo.plataforma,
+            []
+        ).append(pozo)
+
+    return pozos_por_plataforma
+
+
 def cargar_contenidos_iniciales():
-    nuevos = 0
+    existentes = {
+        contenido.slug: contenido
+        for contenido in Contenido.query.all()
+    }
+
     for datos in CONTENIDOS_INICIALES:
-        existe = Contenido.query.filter_by(slug=datos["slug"]).first()
-        if existe:
+        contenido = existentes.get(datos["slug"])
+
+        if contenido is None:
+            db.session.add(Contenido(**datos))
             continue
-        db.session.add(Contenido(**datos))
-        nuevos += 1
-    if nuevos:
-        db.session.commit()
+
+        for campo, valor in datos.items():
+            setattr(contenido, campo, valor)
+
+    db.session.commit()
 
 
 def cargar_pozos_iniciales():
@@ -212,10 +237,17 @@ def portal():
             and os.path.isfile(os.path.join(carpeta_biblioteca, archivo))
         )
 
+    pozos_por_plataforma = obtener_pozos_por_plataforma()
+
     return render_template(
         "portal.html",
         contenidos=contenidos,
         documentos_biblioteca=documentos_biblioteca,
+        pozos_por_plataforma=pozos_por_plataforma,
+        total_pozos=sum(
+            len(pozos)
+            for pozos in pozos_por_plataforma.values()
+        ),
     )
 
 
@@ -245,10 +277,17 @@ def ver_contenido(slug):
         .all()
     )
 
+    pozos_por_plataforma = (
+        obtener_pozos_por_plataforma()
+        if slug == "well-master-files"
+        else {}
+    )
+
     return render_template(
         "contenido.html",
         contenido=contenido,
-        contenidos_menu=contenidos_menu
+        contenidos_menu=contenidos_menu,
+        pozos_por_plataforma=pozos_por_plataforma,
     )
 
 @app.route("/buscar")

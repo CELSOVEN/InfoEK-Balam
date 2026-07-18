@@ -1,6 +1,30 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[data-explorador-pozos]").forEach((explorador) => {
+        const selectorPlataforma = explorador.querySelector("[data-selector-plataforma]");
+        const estadoPlataforma = explorador.querySelector("[data-estado-plataforma]");
+        const gruposPozos = explorador.querySelectorAll("[data-grupo-plataforma]");
+
+        selectorPlataforma.addEventListener("change", () => {
+            gruposPozos.forEach((grupo) => {
+                grupo.hidden = grupo.dataset.grupoPlataforma !== selectorPlataforma.value;
+            });
+
+            const grupoActivo = Array.from(gruposPozos).find(
+                (grupo) => grupo.dataset.grupoPlataforma === selectorPlataforma.value
+            );
+
+            if (!grupoActivo) {
+                estadoPlataforma.textContent = "Elige una plataforma para mostrar sus pozos.";
+                return;
+            }
+
+            const total = grupoActivo.querySelectorAll(".ficha-pozo").length;
+            estadoPlataforma.textContent = `${grupoActivo.dataset.plataforma}: ${total} pozos encontrados.`;
+        });
+    });
+
     const botonMenu = document.querySelector(".boton-menu-movil");
     const menuMovil = document.querySelector(".menu-movil");
 

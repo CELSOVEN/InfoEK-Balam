@@ -67,19 +67,22 @@ def crear_usuario_administrador():
 
 def cargar_contenidos():
     """
-    Inserta los contenidos iniciales únicamente
-    si aún no existen.
+    Inserta los contenidos faltantes y actualiza los existentes.
     """
 
     nuevos = 0
 
+    existentes = {
+        contenido.slug: contenido
+        for contenido in Contenido.query.all()
+    }
+
     for datos in CONTENIDOS_INICIALES:
+        contenido = existentes.get(datos["slug"])
 
-        existe = Contenido.query.filter_by(
-            slug=datos["slug"]
-        ).first()
-
-        if existe:
+        if contenido is not None:
+            for campo, valor in datos.items():
+                setattr(contenido, campo, valor)
             continue
 
         contenido = Contenido(**datos)

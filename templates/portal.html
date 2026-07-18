@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_explorador_pozos.html" import explorador_pozos %}
 
 {% block title %}
     Portal | InfoEk-Balam
@@ -178,7 +179,7 @@
         data-abrir-modal="modal-pozos"
     >
         <span class="indicador-numero">
-            36
+            {{ total_pozos }}
         </span>
 
         <span class="indicador-texto">
@@ -325,6 +326,8 @@
     </div>
 
     <div class="modal-plataformas-contenido modal-pozos-contenido">
+        {{ explorador_pozos(pozos_por_plataforma, "portal") }}
+
         {% set imagenes_pozos = [
             ('01_EK-A.png', 'Plataforma EK-A'),
             ('02_BALAM-TB.png', 'Plataforma Balam-TB'),
