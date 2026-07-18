@@ -1,4 +1,4 @@
-{% macro explorador_pozos(pozos_por_plataforma, prefijo) %}
+{% macro explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, prefijo) %}
     {% if pozos_por_plataforma %}
         <section class="explorador-pozos" aria-labelledby="{{ prefijo }}-titulo-explorador-pozos" data-explorador-pozos>
             <div class="explorador-pozos-encabezado">
@@ -12,6 +12,7 @@
                     <label for="{{ prefijo }}-plataforma-pozos">Plataforma</label>
                     <select id="{{ prefijo }}-plataforma-pozos" data-selector-plataforma>
                         <option value="">Selecciona una plataforma</option>
+                        <option value="todos">Todas las plataformas</option>
                         {% for plataforma, pozos in pozos_por_plataforma.items() %}
                             <option value="{{ loop.index }}">{{ plataforma }} ({{ pozos|length }} pozos)</option>
                         {% endfor %}
@@ -25,7 +26,20 @@
 
             {% for plataforma, pozos in pozos_por_plataforma.items() %}
                 <div class="grupo-pozos-plataforma" data-grupo-plataforma="{{ loop.index }}" data-plataforma="{{ plataforma }}" hidden>
-                    <h3>{{ plataforma }}</h3>
+                    {% set imagen_plataforma = imagenes_por_plataforma.get(plataforma) %}
+                    {% if imagen_plataforma %}
+                        <figure class="detalle-pozos imagen-plataforma-filtrada">
+                            <figcaption>Plataforma {{ plataforma }}</figcaption>
+                            <img
+                                src="{{ url_for('static', filename='img/plataformas_pozos/' ~ imagen_plataforma) }}"
+                                alt="Información de pozos de la plataforma {{ plataforma }}"
+                                class="imagen-plataformas"
+                                loading="lazy"
+                            >
+                        </figure>
+                    {% endif %}
+
+                    <h3>Información de pozos en {{ plataforma }}</h3>
                     <div class="rejilla-pozos">
                         {% for pozo in pozos %}
                             <article class="ficha-pozo">

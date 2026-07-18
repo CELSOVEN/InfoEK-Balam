@@ -326,32 +326,7 @@
     </div>
 
     <div class="modal-plataformas-contenido modal-pozos-contenido">
-        {{ explorador_pozos(pozos_por_plataforma, "portal") }}
-
-        {% set imagenes_pozos = [
-            ('01_EK-A.png', 'Plataforma EK-A'),
-            ('02_BALAM-TB.png', 'Plataforma Balam-TB'),
-            ('03_BALAM-A.png', 'Plataforma Balam-A'),
-            ('04_EK-A2.png', 'Plataforma EK-A2'),
-            ('05_EK-TA.png', 'Plataforma EK-TA'),
-            ('06_BALAM-TE.png', 'Plataforma Balam-TE'),
-            ('07_BALAM-TA.png', 'Plataforma Balam-TA'),
-            ('08_BALAM-TA2.png', 'Plataforma Balam-TA2'),
-            ('09_EK-TB.png', 'Plataforma EK-TB'),
-            ('10_BALAM-TD.png', 'Plataforma Balam-TD')
-        ] %}
-
-        {% for archivo, plataforma in imagenes_pozos %}
-            <figure class="detalle-pozos">
-                <figcaption>{{ plataforma }}</figcaption>
-                <img
-                    src="{{ url_for('static', filename='img/plataformas_pozos/' ~ archivo) }}"
-                    alt="Informaci&oacute;n de pozos de {{ plataforma }}"
-                    class="imagen-plataformas"
-                    loading="lazy"
-                >
-            </figure>
-        {% endfor %}
+        {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal") }}
     </div>
 </dialog>
 

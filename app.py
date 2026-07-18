@@ -103,6 +103,16 @@ def obtener_pozos_por_plataforma():
     return pozos_por_plataforma
 
 
+def obtener_imagenes_por_plataforma(pozos_por_plataforma):
+    return {
+        plataforma: PLATAFORMAS_BUSQUEDA.get(
+            plataforma.upper(),
+            {}
+        ).get("imagen")
+        for plataforma in pozos_por_plataforma
+    }
+
+
 def cargar_contenidos_iniciales():
     existentes = {
         contenido.slug: contenido
@@ -238,12 +248,16 @@ def portal():
         )
 
     pozos_por_plataforma = obtener_pozos_por_plataforma()
+    imagenes_por_plataforma = obtener_imagenes_por_plataforma(
+        pozos_por_plataforma
+    )
 
     return render_template(
         "portal.html",
         contenidos=contenidos,
         documentos_biblioteca=documentos_biblioteca,
         pozos_por_plataforma=pozos_por_plataforma,
+        imagenes_por_plataforma=imagenes_por_plataforma,
         total_pozos=sum(
             len(pozos)
             for pozos in pozos_por_plataforma.values()
@@ -282,12 +296,16 @@ def ver_contenido(slug):
         if slug == "well-master-files"
         else {}
     )
+    imagenes_por_plataforma = obtener_imagenes_por_plataforma(
+        pozos_por_plataforma
+    )
 
     return render_template(
         "contenido.html",
         contenido=contenido,
         contenidos_menu=contenidos_menu,
         pozos_por_plataforma=pozos_por_plataforma,
+        imagenes_por_plataforma=imagenes_por_plataforma,
     )
 
 @app.route("/buscar")

@@ -7,9 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const gruposPozos = explorador.querySelectorAll("[data-grupo-plataforma]");
 
         selectorPlataforma.addEventListener("change", () => {
+            const mostrarTodos = selectorPlataforma.value === "todos";
+
             gruposPozos.forEach((grupo) => {
-                grupo.hidden = grupo.dataset.grupoPlataforma !== selectorPlataforma.value;
+                grupo.hidden = !mostrarTodos
+                    && grupo.dataset.grupoPlataforma !== selectorPlataforma.value;
             });
+
+            if (mostrarTodos) {
+                const total = explorador.querySelectorAll(".ficha-pozo").length;
+                estadoPlataforma.textContent = `Todas las plataformas: ${total} pozos encontrados.`;
+                return;
+            }
 
             const grupoActivo = Array.from(gruposPozos).find(
                 (grupo) => grupo.dataset.grupoPlataforma === selectorPlataforma.value

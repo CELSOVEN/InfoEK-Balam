@@ -805,6 +805,10 @@ pre {
     margin-top: 24px;
 }
 
+.imagen-plataforma-filtrada {
+    margin-bottom: 24px;
+}
+
 .grupo-pozos-plataforma[hidden] {
     display: none;
 }
