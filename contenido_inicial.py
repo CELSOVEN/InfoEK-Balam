@@ -26,7 +26,7 @@ integridad, mantenimiento y operación.
 """,
         "palabras_clave": (
             "Ek-Balam campo infraestructura plataformas "
-            "ductos pozos yacimientos BEC"
+            "ductos pozos yacimientos"
         ),
         "orden": 1,
     },
@@ -43,6 +43,12 @@ El propósito de la recopilación fue identificar, organizar y
 evaluar técnicamente la documentación disponible para
 establecer una línea base confiable del proyecto.
 
+Dado que no se dispuso de acceso directo al Data-Room
+del proyecto durante esta actividad, la documentación del
+proyecto presentada en este informe se compiló a partir de
+las fuentes de información más confiables disponibles 
+al momento de la ejecución.
+
 La revisión incluye información de producción, estructuras,
 sistemas mecánicos, planos, diagramas de tuberías e
 instrumentación, especificaciones de materiales y registros
@@ -57,6 +63,7 @@ ingeniería multidisciplinaria.
         "palabras_clave": (
             "executive summary data room integridad "
             "brownfield mantenimiento RBI ingeniería"
+            "resumen"
         ),
         "orden": 2,
     },
@@ -110,6 +117,8 @@ plataforma y la relación con la infraestructura superficial.
         "palabras_clave": (
             "pozos well master Ek-A Balam-TB Balam-A Ek-A2 "
             "Ek-TA Balam-TE Balam-TA Ek-TB Balam-TD"
+            "EK"
+            "POZOS"
         ),
         "orden": 4,
     },
