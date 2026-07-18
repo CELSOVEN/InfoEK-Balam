@@ -18,4 +18,4 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    DEBUG = os.environ.get("FLASK_DEBUG", "True").lower() == "false"
+    DEBUG = os.environ.get("FLASK_DEBUG", "False").lower() == "true"

@@ -150,6 +150,11 @@ def inicio():
     return redirect(url_for("login"))
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
