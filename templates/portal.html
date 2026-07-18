@@ -19,13 +19,58 @@
         </p>
     </div>
 
-    <a
-        class="boton-secundario"
-        href="{{ url_for('logout') }}"
-    >
-        Cerrar sesión
-    </a>
+    <div class="acciones-bienvenida">
+        <button
+            type="button"
+            class="miniatura-ubicacion"
+            aria-haspopup="dialog"
+            aria-controls="modal-ubicacion"
+            data-abrir-modal="modal-ubicacion"
+        >
+            <img
+                src="{{ url_for('static', filename='img/Inicio/location.png') }}"
+                alt="Ubicación del campo Ek-Balam"
+            >
+            <span>Ver ubicación</span>
+        </button>
+
+        <a
+            class="boton-secundario"
+            href="{{ url_for('logout') }}"
+        >
+            Cerrar sesión
+        </a>
+    </div>
 </section>
+
+<dialog
+    class="modal-plataformas modal-ubicacion"
+    id="modal-ubicacion"
+    aria-labelledby="titulo-modal-ubicacion"
+>
+    <div class="modal-plataformas-encabezado">
+        <div>
+            <p class="etiqueta">UBICACI&Oacute;N</p>
+            <h2 id="titulo-modal-ubicacion">Campo Ek-Balam</h2>
+        </div>
+
+        <button
+            type="button"
+            class="cerrar-modal-plataformas"
+            aria-label="Cerrar ventana"
+            data-cerrar-modal
+        >
+            &times;
+        </button>
+    </div>
+
+    <div class="modal-ubicacion-contenido">
+        <img
+            src="{{ url_for('static', filename='img/Inicio/location.png') }}"
+            alt="Mapa de ubicación del campo Ek-Balam"
+        >
+    </div>
+</dialog>
 
 <section class="buscador-principal">
     <form
@@ -54,13 +99,20 @@
 </section>
 
 <section class="indicadores">
-    <article class="indicador">
+    <article
+        class="indicador indicador-interactivo"
+        role="button"
+        tabindex="0"
+        aria-haspopup="dialog"
+        aria-controls="modal-biblioteca"
+        data-abrir-modal="modal-biblioteca"
+    >
         <span class="indicador-numero">
-            {{ total_secciones }}
+            {{ documentos_biblioteca|length }}
         </span>
 
         <span class="indicador-texto">
-            Secciones disponibles
+            Biblioteca
         </span>
     </article>
 
@@ -73,12 +125,31 @@
         data-abrir-modal="modal-plataformas"
     >
         <span class="indicador-numero">
-            11
+            11 <small>+ 2 inactivas</small>
         </span>
 
         <span class="indicador-texto">
             Plataformas activas
         </span>
+
+        <div class="menu-plataformas" role="tooltip">
+            <strong>Plataformas del campo</strong>
+            <ul>
+                <li>Balam-TA</li>
+                <li>Balam-TB</li>
+                <li>Balam-TD</li>
+                <li>Balam-TE</li>
+                <li>Balam-A</li>
+                <li>Balam-TA2</li>
+                <li>Ek-A</li>
+                <li>Ek-A2</li>
+                <li>Ek-TA</li>
+                <li>Ek-TB</li>
+                <li>Ek-A Habitacional</li>
+                <li class="plataforma-inactiva">Sea Horse Balam-1 (inactiva)</li>
+                <li class="plataforma-inactiva">Sea Pony Balam-TC (inactiva)</li>
+            </ul>
+        </div>
     </article>
 
     <article
@@ -115,6 +186,49 @@
         </span>
     </article>
 </section>
+
+<dialog
+    class="modal-plataformas modal-biblioteca"
+    id="modal-biblioteca"
+    aria-labelledby="titulo-modal-biblioteca"
+>
+    <div class="modal-plataformas-encabezado">
+        <div>
+            <p class="etiqueta">DOCUMENTOS</p>
+            <h2 id="titulo-modal-biblioteca">Biblioteca</h2>
+        </div>
+
+        <button
+            type="button"
+            class="cerrar-modal-plataformas"
+            aria-label="Cerrar ventana"
+            data-cerrar-modal
+        >
+            &times;
+        </button>
+    </div>
+
+    <div class="lista-biblioteca">
+        {% if documentos_biblioteca %}
+            <ul>
+                {% for documento in documentos_biblioteca %}
+                    <li>
+                        <span class="icono-pdf" aria-hidden="true">PDF</span>
+                        <a
+                            href="{{ url_for('ver_documento_biblioteca', nombre_archivo=documento) }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            {{ documento }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay documentos PDF disponibles.</p>
+        {% endif %}
+    </div>
+</dialog>
 
 <dialog
     class="modal-plataformas"

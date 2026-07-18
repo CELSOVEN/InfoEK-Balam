@@ -9,6 +9,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_from_directory,
     url_for,
 )
 from flask_login import (
@@ -155,12 +156,33 @@ def portal():
         .all()
     )
 
-    total_secciones = len(contenidos)
+    carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
+    documentos_biblioteca = []
+
+    if os.path.isdir(carpeta_biblioteca):
+        documentos_biblioteca = sorted(
+            archivo
+            for archivo in os.listdir(carpeta_biblioteca)
+            if archivo.lower().endswith(".pdf")
+            and os.path.isfile(os.path.join(carpeta_biblioteca, archivo))
+        )
 
     return render_template(
         "portal.html",
         contenidos=contenidos,
-        total_secciones=total_secciones
+        documentos_biblioteca=documentos_biblioteca,
+    )
+
+
+@app.route("/biblioteca/<path:nombre_archivo>")
+@login_required
+def ver_documento_biblioteca(nombre_archivo):
+    carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
+
+    return send_from_directory(
+        carpeta_biblioteca,
+        nombre_archivo,
+        as_attachment=False,
     )
 
 @app.route("/contenido/<string:slug>")

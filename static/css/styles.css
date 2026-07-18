@@ -219,6 +219,59 @@ pre {
     color: #454545;
 }
 
+.acciones-bienvenida {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-end;
+    align-self: stretch;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.miniatura-ubicacion {
+    width: 150px;
+    padding: 7px;
+    color: #333;
+    font-size: 0.78rem;
+    background: white;
+    border: 1px solid #c9cdd2;
+    border-radius: 8px;
+    box-shadow: 0 2px 7px rgb(0 0 0 / 12%);
+    cursor: zoom-in;
+}
+
+.miniatura-ubicacion:hover {
+    background: #fff;
+    border-color: var(--rojo-principal);
+    transform: translateY(-1px);
+}
+
+.miniatura-ubicacion img {
+    display: block;
+    width: 100%;
+    height: 72px;
+    margin-bottom: 5px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.modal-ubicacion {
+    width: min(1000px, calc(100% - 40px));
+}
+
+.modal-ubicacion-contenido {
+    padding: 16px;
+    overflow: auto;
+    background: #f4f4f4;
+}
+
+.modal-ubicacion-contenido img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .tarjeta,
 .portal-bienvenida,
 .indicador,
@@ -331,7 +384,15 @@ pre {
     color: #5f6c7b;
 }
 
+.indicador-numero small {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #a7191f;
+    white-space: nowrap;
+}
+
 .indicador-interactivo {
+    position: relative;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -342,6 +403,112 @@ pre {
     box-shadow: 0 8px 20px rgb(0 0 0 / 14%);
     outline: 3px solid rgb(0 82 204 / 24%);
     outline-offset: 2px;
+}
+
+.menu-plataformas {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 10px);
+    left: 50%;
+    width: min(310px, 90vw);
+    padding: 16px 18px;
+    visibility: hidden;
+    opacity: 0;
+    color: #263442;
+    background: white;
+    border: 1px solid #d7dce2;
+    border-radius: 9px;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 20%);
+    transform: translate(-50%, -5px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+    transition-delay: 0s;
+    pointer-events: none;
+}
+
+.menu-plataformas::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    border: 8px solid transparent;
+    border-bottom-color: white;
+    transform: translateX(-50%);
+}
+
+.menu-plataformas strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--rojo-oscuro);
+}
+
+.menu-plataformas ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 18px;
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.82rem;
+}
+
+.menu-plataformas .plataforma-inactiva {
+    color: #8b2529;
+    font-weight: 600;
+}
+
+.indicador-interactivo:hover .menu-plataformas {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 1.5s;
+}
+
+.indicador-interactivo:focus-visible .menu-plataformas {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 0.35s;
+}
+
+.modal-biblioteca {
+    width: min(760px, calc(100% - 32px));
+}
+
+.lista-biblioteca {
+    max-height: calc(100dvh - 130px);
+    padding: 18px 24px 24px;
+    overflow: auto;
+}
+
+.lista-biblioteca ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lista-biblioteca li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e5e9;
+}
+
+.lista-biblioteca li:last-child { border-bottom: 0; }
+
+.lista-biblioteca a {
+    color: #174f9c;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.icono-pdf {
+    flex: 0 0 auto;
+    padding: 5px 6px;
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 800;
+    background: #b4161b;
+    border-radius: 4px;
 }
 
 .modal-plataformas {
@@ -818,12 +985,29 @@ pre {
         font-size: clamp(1.55rem, 8vw, 2rem);
         line-height: 1.25;
     }
-    .portal-bienvenida .boton-secundario { margin-top: 12px; }
+    .acciones-bienvenida {
+        align-items: stretch;
+        margin-top: 18px;
+        gap: 12px;
+    }
+    .miniatura-ubicacion { width: 150px; align-self: flex-end; }
+    .portal-bienvenida .boton-secundario { align-self: flex-end; }
     .indicadores {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
     .indicador { min-width: 0; padding: 18px; }
+    .menu-plataformas {
+        right: 0;
+        left: auto;
+        width: min(310px, calc(100vw - 32px));
+        transform: translateY(-5px);
+    }
+    .menu-plataformas::before { right: 35px; left: auto; transform: none; }
+    .indicador-interactivo:hover .menu-plataformas,
+    .indicador-interactivo:focus-visible .menu-plataformas {
+        transform: translateY(0);
+    }
 
     .modal-plataformas {
         width: calc(100% - 20px);
