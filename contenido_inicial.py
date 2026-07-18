@@ -1,7 +1,7 @@
 CONTENIDOS_INICIALES = [
     {
         "slug": "overview",
-        "titulo": "Overview",
+        "titulo": "Descripción general",
         "categoria": "General",
         "resumen": (
             "Descripción general del campo Ek-Balam, "
@@ -32,7 +32,7 @@ integridad, mantenimiento y operación.
     },
     {
         "slug": "executive-summary",
-        "titulo": "Executive Summary",
+        "titulo": "Resumen ejecutivo",
         "categoria": "General",
         "resumen": (
             "Propósito, alcance y utilidad de la recopilación "
@@ -62,7 +62,7 @@ ingeniería multidisciplinaria.
     },
     {
         "slug": "information-gathering",
-        "titulo": "Information Gathering",
+        "titulo": "Recopilación de información",
         "categoria": "Documentación",
         "resumen": (
             "Fuentes y metodología utilizadas para recopilar "
@@ -89,7 +89,7 @@ incompatibilidades.
     },
     {
         "slug": "well-master-files",
-        "titulo": "Well Master Files",
+        "titulo": "Expedientes maestros de pozos",
         "categoria": "Pozos",
         "resumen": (
             "Información maestra, ubicación, estado y "
@@ -115,7 +115,7 @@ plataforma y la relación con la infraestructura superficial.
     },
     {
         "slug": "production-history",
-        "titulo": "Production History & Performance",
+        "titulo": "Historial y desempeño de producción",
         "categoria": "Producción",
         "resumen": (
             "Historiales de producción de aceite, gas y agua "
@@ -140,7 +140,7 @@ facilitar su consulta y comparación.
     },
     {
         "slug": "platform-offshore-facilities",
-        "titulo": "Platform & Offshore Facilities Data",
+        "titulo": "Datos de plataformas e instalaciones",
         "categoria": "Instalaciones",
         "resumen": (
             "Planos generales, estructuras, P&ID, ductos y "
@@ -163,7 +163,7 @@ los sistemas principales de las plataformas.
     },
     {
         "slug": "regulatory-sener",
-        "titulo": "Regulatory & SENER Submissions",
+        "titulo": "Documentación regulatoria y entregas SENER",
         "categoria": "Regulatorio",
         "resumen": (
             "Planes y documentación regulatoria presentada "
@@ -185,7 +185,7 @@ alcances, instalaciones, actividades y programas del campo.
     },
     {
         "slug": "detailed-documents",
-        "titulo": "Detailed List of Documents",
+        "titulo": "Listado detallado de documentos",
         "categoria": "Documentación",
         "resumen": (
             "Clasificación y listado detallado de los "
@@ -210,7 +210,7 @@ información disponible y las posibles brechas documentales.
     },
     {
         "slug": "operational-history",
-        "titulo": "Operational Documentation and History",
+        "titulo": "Documentación e historial operativo",
         "categoria": "Operación",
         "resumen": (
             "Registros históricos, inspecciones, mantenimiento "
@@ -233,7 +233,7 @@ verificación o actualización.
     },
     {
         "slug": "conclusions",
-        "titulo": "Conclusions",
+        "titulo": "Conclusiones",
         "categoria": "General",
         "resumen": (
             "Conclusiones y valor de la información técnica "
