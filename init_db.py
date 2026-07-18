@@ -4,7 +4,8 @@ from app import app
 from database import db
 
 from contenido_inicial import CONTENIDOS_INICIALES
-from models import Usuario, Contenido
+from datos_pozos import POZOS_INICIALES
+from models import Usuario, Contenido, Pozo
 
 
 def crear_usuario_administrador():
@@ -98,6 +99,39 @@ def cargar_contenidos():
     )
 
 
+def cargar_pozos():
+    """
+    Inserta los pozos iniciales únicamente si aún no existen.
+    """
+
+    nuevos = 0
+
+    for datos in POZOS_INICIALES:
+
+        existe = Pozo.query.filter_by(
+            nombre=datos["nombre"]
+        ).first()
+
+        if existe:
+            continue
+
+        pozo = Pozo(**datos)
+
+        db.session.add(pozo)
+
+        nuevos += 1
+
+    db.session.commit()
+
+    print(
+        f"✓ Nuevos pozos agregados: {nuevos}"
+    )
+
+    print(
+        f"✓ Total de pozos: {Pozo.query.count()}"
+    )
+
+
 def inicializar_base_datos():
     """
     Inicializa completamente la base de datos.
@@ -119,6 +153,8 @@ def inicializar_base_datos():
         crear_usuario_administrador()
 
         cargar_contenidos()
+
+        cargar_pozos()
 
         print(
             "\n✓ Base de datos lista.\n"

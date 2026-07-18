@@ -1,7 +1,9 @@
 import os
 import re
 
-from models import Contenido, Usuario
+from models import Contenido, Pozo, Usuario
+from contenido_inicial import CONTENIDOS_INICIALES
+from datos_pozos import POZOS_INICIALES
 
 from flask import (
     Flask,
@@ -22,7 +24,6 @@ from flask_login import (
 
 from config import Config
 from database import db
-from models import Usuario
 
 
 app = Flask(__name__)
@@ -83,7 +84,46 @@ def buscar_plataforma(termino):
 
     return None
 
+
+def cargar_contenidos_iniciales():
+    nuevos = 0
+    for datos in CONTENIDOS_INICIALES:
+        existe = Contenido.query.filter_by(slug=datos["slug"]).first()
+        if existe:
+            continue
+        db.session.add(Contenido(**datos))
+        nuevos += 1
+    if nuevos:
+        db.session.commit()
+
+
+def cargar_pozos_iniciales():
+    existentes = {
+        pozo.pozos.strip().lower(): pozo
+        for pozo in Pozo.query.all()
+        if pozo.pozos
+    }
+
+    for datos in POZOS_INICIALES:
+        identificador = datos["pozos"].strip().lower()
+        pozo = existentes.get(identificador)
+
+        if pozo is None:
+            db.session.add(Pozo(**datos))
+            continue
+
+        for campo, valor in datos.items():
+            setattr(pozo, campo, valor)
+
+    db.session.commit()
+
+
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+    cargar_contenidos_iniciales()
+    cargar_pozos_iniciales()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -219,28 +259,51 @@ def buscar():
 
     if termino:
         resultado_plataforma = buscar_plataforma(termino)
-        patron = f"%{termino}%"
+        termino_lower = termino.lower()
 
-        resultados = (
+        resultados_contenido = (
             Contenido.query
             .filter(
                 Contenido.activo.is_(True),
                 db.or_(
-                    Contenido.titulo.ilike(patron),
-                    Contenido.categoria.ilike(patron),
-                    Contenido.resumen.ilike(patron),
-                    Contenido.contenido.ilike(patron),
-                    Contenido.palabras_clave.ilike(patron),
+                    db.func.lower(Contenido.titulo).contains(termino_lower),
+                    db.func.lower(Contenido.categoria).contains(termino_lower),
+                    db.func.lower(Contenido.resumen).contains(termino_lower),
+                    db.func.lower(Contenido.contenido).contains(termino_lower),
+                    db.func.lower(Contenido.palabras_clave).contains(termino_lower),
                 )
             )
             .order_by(Contenido.orden)
             .all()
         )
 
+        resultados_pozos = (
+            Pozo.query
+            .filter(
+                Pozo.activo.is_(True),
+                db.or_(
+                    db.func.lower(Pozo.nombre).contains(termino_lower),
+                    db.func.lower(Pozo.plataforma).contains(termino_lower),
+                    db.func.lower(Pozo.pozos).contains(termino_lower),
+                    db.func.lower(Pozo.coordenadas_utm).contains(termino_lower),
+                    db.func.lower(Pozo.tipo_perforacion).contains(termino_lower),
+                    db.func.lower(Pozo.tipo).contains(termino_lower),
+                    db.func.lower(Pozo.servicio).contains(termino_lower),
+                    db.func.lower(Pozo.palabras_clave).contains(termino_lower),
+                )
+            )
+            .order_by(Pozo.plataforma, Pozo.nombre)
+            .all()
+        )
+    else:
+        resultados_contenido = []
+        resultados_pozos = []
+
     return render_template(
         "busqueda.html",
         termino=termino,
-        resultados=resultados,
+        resultados_contenido=resultados_contenido,
+        resultados_pozos=resultados_pozos,
         resultado_plataforma=resultado_plataforma,
     )
 

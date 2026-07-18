@@ -43,12 +43,12 @@
             </h2>
 
             <p>
-                {{ resultados|length + (1 if resultado_plataforma else 0) }}
+                {{ resultados_contenido|length + resultados_pozos|length + (1 if resultado_plataforma else 0) }}
                 coincidencia(s) encontrada(s).
             </p>
         </div>
 
-        {% if resultados or resultado_plataforma %}
+        {% if resultados_contenido or resultados_pozos or resultado_plataforma %}
 
             <div class="lista-resultados">
 
@@ -87,7 +87,7 @@
                     </article>
                 {% endif %}
 
-                {% for resultado in resultados %}
+                {% for resultado in resultados_contenido %}
 
                     <article class="resultado-busqueda">
                         <span class="categoria">
@@ -107,6 +107,32 @@
 
                         <p>
                             {{ resultado.resumen }}
+                        </p>
+                    </article>
+
+                {% endfor %}
+
+                {% for pozo in resultados_pozos %}
+
+                    <article class="resultado-busqueda">
+                        <span class="categoria">
+                            Pozos
+                        </span>
+
+                        <h3>
+                            {{ pozo.nombre }}
+                        </h3>
+
+                        <p>
+                            Plataforma: {{ pozo.plataforma }} | Pozo(s): {{ pozo.pozos }}
+                        </p>
+
+                        <p>
+                            Tipo: {{ pozo.tipo }} | Servicio: {{ pozo.servicio }}
+                        </p>
+
+                        <p>
+                            Coordenadas UTM: {{ pozo.coordenadas_utm }}
                         </p>
                     </article>
 

@@ -34,6 +34,97 @@ class Usuario(UserMixin, db.Model):
         nullable=False
     )
 
+
+class Pozo(db.Model):
+    __tablename__ = "pozos"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    nombre = db.Column(
+        db.String(250),
+        unique=True,
+        nullable=False
+    )
+
+    plataforma = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    fecha_instalacion = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    tipo = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    servicio = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    profundidad_agua = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    numero_pozos = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
+    pozos = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    coordenadas_utm = db.Column(
+        db.String(120),
+        nullable=True
+    )
+
+    tipo_perforacion = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    inicio_perforacion = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    fin_perforacion = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    profundidad_total = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    profundidad_vertical = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    palabras_clave = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    activo = db.Column(
+        db.Boolean,
+        default=True,
+        nullable=False
+    )
+
     def establecer_password(self, password):
         self.password_hash = generate_password_hash(password)
 

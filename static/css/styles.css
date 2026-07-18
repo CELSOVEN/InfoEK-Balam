@@ -372,6 +372,7 @@ pre {
     padding: 24px;
 
     background: white;
+    border-top: 3px solid transparent;
     border-radius: 10px;
     box-shadow: 0 4px 14px rgb(0 0 0 / 7%);
 }
@@ -398,7 +399,7 @@ pre {
 .indicador-interactivo {
     position: relative;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-top-color 0.2s ease;
 }
 
 .indicador-interactivo:hover,
@@ -407,6 +408,7 @@ pre {
     box-shadow: 0 8px 20px rgb(0 0 0 / 14%);
     outline: 3px solid rgb(0 82 204 / 24%);
     outline-offset: 2px;
+    border-top-color: var(--rojo-principal);
 }
 
 .menu-plataformas {
