@@ -31,7 +31,16 @@
                     data-panel-historial="{{ loop.index }}"
                     hidden
                 >
-                    <figcaption>Historial de producción de {{ plataforma }}</figcaption>
+                    <figcaption>
+                        <span>Historial de producción de {{ plataforma }}</span>
+                        <button
+                            type="button"
+                            class="cerrar-historial-produccion"
+                            data-cerrar-historial
+                        >
+                            Cerrar historial
+                        </button>
+                    </figcaption>
                     <a
                         class="visor-historial-produccion"
                         href="{{ url_for('static', filename='img/plataformas_pozos/' ~ archivo) }}"

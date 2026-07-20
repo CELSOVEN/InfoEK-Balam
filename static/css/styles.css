@@ -709,6 +709,8 @@ pre {
 }
 
 .contenido-abierto {
+    min-width: 0;
+    max-width: 100%;
     padding: 30px;
     scroll-margin-top: 90px;
     background: var(--blanco);
@@ -1040,6 +1042,9 @@ pre {
 }
 
 .selector-historiales {
+    min-width: 0;
+    max-width: 100%;
+    scroll-margin-top: 90px;
     margin-top: 24px;
     padding: 20px;
     background: #f7f7f7;
@@ -1086,18 +1091,46 @@ pre {
 }
 
 .panel-historial-produccion {
+    min-width: 0;
+    max-width: 100%;
     margin: 14px 0 0;
-    overflow: hidden;
+    overflow: visible;
     background: var(--blanco);
     border: 1px solid var(--gris-suave);
     border-radius: 8px;
 }
 
 .panel-historial-produccion figcaption {
+    position: sticky;
+    top: 66px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
     padding: 11px 14px;
     color: var(--blanco);
     font-weight: 700;
     background: var(--gris-oscuro);
+    border-radius: 8px 8px 0 0;
+}
+
+.panel-historial-produccion .visor-historial-produccion {
+    border-radius: 0 0 8px 8px;
+}
+
+.cerrar-historial-produccion {
+    flex: 0 0 auto;
+    padding: 7px 11px;
+    color: var(--blanco);
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--rojo-principal);
+    border: 1px solid rgb(255 255 255 / 35%);
+}
+
+.cerrar-historial-produccion:hover {
+    background: var(--rojo-hover);
 }
 
 .historial-produccion-plataforma figcaption {
@@ -1117,7 +1150,11 @@ pre {
 
 .visor-historial-produccion {
     display: block;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
     background: #f7f7f7;
 }
 
@@ -1458,6 +1495,10 @@ pre {
     .historial-produccion-plataforma figcaption span {
         display: block;
         margin-top: 3px;
+    }
+    .panel-historial-produccion figcaption {
+        flex-wrap: wrap;
+        top: 64px;
     }
     .visor-historial-produccion img {
         width: 900px;

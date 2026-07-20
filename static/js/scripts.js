@@ -41,8 +41,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const paneles = selector.querySelectorAll("[data-panel-historial]");
         const estado = selector.querySelector("[data-estado-historial]");
 
+        const cerrarHistorial = () => {
+            botones.forEach((elemento) => {
+                elemento.setAttribute("aria-pressed", "false");
+            });
+            paneles.forEach((panel) => {
+                panel.hidden = true;
+            });
+            estado.textContent = "Elige una plataforma para mostrar la gráfica.";
+            selector.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+
         botones.forEach((boton) => {
             boton.addEventListener("click", () => {
+                if (boton.getAttribute("aria-pressed") === "true") {
+                    cerrarHistorial();
+                    return;
+                }
+
                 const identificador = boton.dataset.mostrarHistorial;
 
                 botones.forEach((elemento) => {
@@ -63,6 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 estado.textContent = `Mostrando historial de producción de ${boton.textContent.trim()}.`;
             });
+        });
+
+        selector.querySelectorAll("[data-cerrar-historial]").forEach((boton) => {
+            boton.addEventListener("click", cerrarHistorial);
         });
     });
 
