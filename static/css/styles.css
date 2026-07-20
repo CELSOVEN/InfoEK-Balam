@@ -629,6 +629,85 @@ pre {
     gap: 24px;
 }
 
+.grupos-contenido {
+    display: grid;
+    gap: 16px;
+}
+
+.grupo-contenido {
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 10px;
+    box-shadow: 0 4px 14px var(--sombra);
+}
+
+.boton-grupo-contenido {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 82px;
+    padding: 18px 64px 18px 22px;
+    color: var(--blanco);
+    background: var(--gris-oscuro);
+    cursor: pointer;
+    list-style: none;
+}
+
+.boton-grupo-contenido::-webkit-details-marker {
+    display: none;
+}
+
+.boton-grupo-contenido::after {
+    content: "+";
+    position: absolute;
+    right: 22px;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    color: var(--blanco);
+    font-size: 1.55rem;
+    font-weight: 400;
+    background: var(--rojo-principal);
+    border-radius: 50%;
+}
+
+.grupo-contenido[open] > .boton-grupo-contenido::after {
+    content: "−";
+}
+
+.boton-grupo-contenido:hover,
+.boton-grupo-contenido:focus-visible {
+    background: #3a3a3a;
+}
+
+.boton-grupo-contenido:focus-visible {
+    outline: 3px solid rgb(167 25 31 / 35%);
+    outline-offset: -3px;
+}
+
+.boton-grupo-contenido strong,
+.boton-grupo-contenido small {
+    display: block;
+}
+
+.boton-grupo-contenido strong {
+    font-size: 1.15rem;
+}
+
+.boton-grupo-contenido small {
+    margin-top: 2px;
+    color: #e2e2e2;
+}
+
+.contenidos-del-grupo {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+    background: var(--gris-claro);
+}
+
 .contenido-abierto {
     padding: 30px;
     scroll-margin-top: 90px;
@@ -1270,6 +1349,9 @@ pre {
 
     .tarjeta-contenido { padding: 20px; }
     .contenido-abierto { padding: 22px; }
+    .boton-grupo-contenido { padding: 16px 56px 16px 18px; }
+    .boton-grupo-contenido::after { right: 16px; }
+    .contenidos-del-grupo { padding: 12px; }
     .cabecera-contenido-abierto { gap: 14px; }
     .cabecera-contenido-abierto h3 { font-size: 1.25rem; }
     .explorador-pozos-encabezado { display: block; }

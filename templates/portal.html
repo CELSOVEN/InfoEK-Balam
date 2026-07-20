@@ -339,43 +339,74 @@
         </div>
     </div>
 
-    <div class="rejilla-contenidos">
+    {% set grupos_contenido = [
+        {
+            'titulo': 'Información general',
+            'descripcion': 'Contexto, alcance y recopilación de la información del campo.',
+            'slugs': ['overview', 'executive-summary', 'information-gathering']
+        },
+        {
+            'titulo': 'Pozos, producción e instalaciones',
+            'descripcion': 'Información técnica de pozos, producción y plataformas marinas.',
+            'slugs': ['well-master-files', 'production-history', 'platform-offshore-facilities']
+        },
+        {
+            'titulo': 'Documentación y operación',
+            'descripcion': 'Información regulatoria, documental y del historial operativo.',
+            'slugs': ['regulatory-sener', 'detailed-documents', 'operational-history']
+        },
+        {
+            'titulo': 'Conclusiones',
+            'descripcion': 'Conclusiones y valor de la información técnica consolidada.',
+            'slugs': ['conclusions']
+        }
+    ] %}
 
-        {% for contenido in contenidos %}
+    <div class="grupos-contenido">
+        {% for grupo in grupos_contenido %}
+            <details class="grupo-contenido">
+                <summary class="boton-grupo-contenido">
+                    <span>
+                        <strong>{{ grupo.titulo }}</strong>
+                        <small>{{ grupo.descripcion }}</small>
+                    </span>
+                </summary>
 
-            <article
-                id="{{ contenido.slug }}"
-                class="contenido-abierto"
-            >
-                <div class="cabecera-contenido-abierto">
-                    {{ icono_contenido(contenido.slug) }}
+                <div class="contenidos-del-grupo">
+                    {% for contenido in contenidos %}
+                        {% if contenido.slug in grupo.slugs %}
+                            <article
+                                id="{{ contenido.slug }}"
+                                class="contenido-abierto"
+                            >
+                                <div class="cabecera-contenido-abierto">
+                                    {{ icono_contenido(contenido.slug) }}
 
-                    <div>
-                        <h3>
-                            {{ contenido.titulo }}
-                        </h3>
+                                    <div>
+                                        <h3>{{ contenido.titulo }}</h3>
+                                        <p class="resumen-contenido-abierto">
+                                            {{ contenido.resumen }}
+                                        </p>
+                                    </div>
+                                </div>
 
-                        <p class="resumen-contenido-abierto">
-                            {{ contenido.resumen }}
-                        </p>
-                    </div>
-                </div>
+                                <div class="texto-contenido texto-contenido-abierto">
+                                    {% for parrafo in contenido.contenido.split('\n\n') %}
+                                        {% if parrafo.strip() %}
+                                            <p>{{ parrafo.strip() }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
 
-                <div class="texto-contenido texto-contenido-abierto">
-                    {% for parrafo in contenido.contenido.split('\n\n') %}
-                        {% if parrafo.strip() %}
-                            <p>{{ parrafo.strip() }}</p>
+                                {% if contenido.slug == 'well-master-files' %}
+                                    {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal-contenido") }}
+                                {% endif %}
+                            </article>
                         {% endif %}
                     {% endfor %}
                 </div>
-
-                {% if contenido.slug == 'well-master-files' %}
-                    {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal-contenido") }}
-                {% endif %}
-            </article>
-
+            </details>
         {% endfor %}
-
     </div>
 </section>
 
