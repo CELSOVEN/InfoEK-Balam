@@ -90,7 +90,7 @@ def obtener_pozos_por_plataforma():
     pozos = (
         Pozo.query
         .filter_by(activo=True)
-        .order_by(Pozo.plataforma, Pozo.pozos)
+        .order_by(Pozo.plataforma, Pozo.servicio, Pozo.pozos)
         .all()
     )
 
@@ -134,13 +134,21 @@ def cargar_contenidos_iniciales():
 
 def cargar_pozos_iniciales():
     existentes = {
-        pozo.pozos.strip().lower(): pozo
+        pozo.nombre.strip().lower(): pozo
         for pozo in Pozo.query.all()
-        if pozo.pozos
+        if pozo.nombre
     }
 
+    nombres_vigentes = {
+        datos["nombre"].strip().lower() for datos in POZOS_INICIALES
+    }
+
+    for identificador, pozo in existentes.items():
+        if identificador not in nombres_vigentes:
+            pozo.activo = False
+
     for datos in POZOS_INICIALES:
-        identificador = datos["pozos"].strip().lower()
+        identificador = datos["nombre"].strip().lower()
         pozo = existentes.get(identificador)
 
         if pozo is None:
@@ -157,6 +165,15 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+    # SQLite no agrega columnas nuevas mediante create_all. Esta migración
+    # conserva las instalaciones existentes sin requerir Flask-Migrate.
+    columnas_pozo = {
+        columna[1]
+        for columna in db.session.execute(db.text("PRAGMA table_info(pozos)"))
+    }
+    if "elemento" not in columnas_pozo:
+        db.session.execute(db.text("ALTER TABLE pozos ADD COLUMN elemento VARCHAR(250)"))
+        db.session.commit()
     cargar_contenidos_iniciales()
     cargar_pozos_iniciales()
 
@@ -258,10 +275,12 @@ def portal():
         documentos_biblioteca=documentos_biblioteca,
         pozos_por_plataforma=pozos_por_plataforma,
         imagenes_por_plataforma=imagenes_por_plataforma,
-        total_pozos=sum(
-            len(pozos)
-            for pozos in pozos_por_plataforma.values()
-        ),
+        total_pozos=db.session.query(
+            db.func.coalesce(db.func.sum(Pozo.numero_pozos), 0)
+        ).filter(
+            Pozo.activo.is_(True),
+            db.func.lower(Pozo.servicio) == "production",
+        ).scalar(),
     )
 
 
@@ -345,6 +364,7 @@ def buscar():
                 Pozo.activo.is_(True),
                 db.or_(
                     db.func.lower(Pozo.nombre).contains(termino_lower),
+                    db.func.lower(Pozo.elemento).contains(termino_lower),
                     db.func.lower(Pozo.plataforma).contains(termino_lower),
                     db.func.lower(Pozo.pozos).contains(termino_lower),
                     db.func.lower(Pozo.coordenadas_utm).contains(termino_lower),

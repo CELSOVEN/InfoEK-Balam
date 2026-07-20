@@ -15,8 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (mostrarTodos) {
-                const total = explorador.querySelectorAll(".ficha-pozo").length;
-                estadoPlataforma.textContent = `Todas las plataformas: ${total} pozos encontrados.`;
+                const total = Array.from(explorador.querySelectorAll(".ficha-pozo"))
+                    .reduce((suma, ficha) => suma + Number(ficha.dataset.cantidadProduccion || 0), 0);
+                estadoPlataforma.textContent = `Todas las plataformas: ${total} pozos de producción encontrados.`;
                 return;
             }
 
@@ -29,8 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const total = grupoActivo.querySelectorAll(".ficha-pozo").length;
-            estadoPlataforma.textContent = `${grupoActivo.dataset.plataforma}: ${total} pozos encontrados.`;
+            const total = Array.from(grupoActivo.querySelectorAll(".ficha-pozo"))
+                .reduce((suma, ficha) => suma + Number(ficha.dataset.cantidadProduccion || 0), 0);
+            estadoPlataforma.textContent = `${grupoActivo.dataset.plataforma}: ${total} pozos de producción encontrados.`;
         });
     });
 

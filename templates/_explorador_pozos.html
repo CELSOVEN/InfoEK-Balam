@@ -14,7 +14,9 @@
                         <option value="">Selecciona una plataforma</option>
                         <option value="todos">Todas las plataformas</option>
                         {% for plataforma, pozos in pozos_por_plataforma.items() %}
-                            <option value="{{ loop.index }}">{{ plataforma }} ({{ pozos|length }} pozos)</option>
+                            {% set produccion = pozos|selectattr('servicio', 'equalto', 'Production')|selectattr('numero_pozos')|list %}
+                            {% set fuera_servicio = pozos|selectattr('servicio', 'equalto', 'Out of Service')|list %}
+                            <option value="{{ loop.index }}">{{ plataforma }} ({% if fuera_servicio %}out of service{% else %}{{ produccion|sum(attribute='numero_pozos') }} pozos de producci&oacute;n{% endif %})</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -42,13 +44,14 @@
                     <h3>Información de pozos en {{ plataforma }}</h3>
                     <div class="rejilla-pozos">
                         {% for pozo in pozos %}
-                            <article class="ficha-pozo">
+                            <article class="ficha-pozo" data-cantidad-produccion="{{ pozo.numero_pozos or 0 if pozo.servicio == 'Production' else 0 }}">
                                 <div class="ficha-pozo-titulo">
-                                    <span>{{ pozo.pozos }}</span>
+                                    <span>{{ pozo.pozos or pozo.elemento or pozo.plataforma }}</span>
                                     <small>{{ pozo.tipo_perforacion or 'Sin tipo de perforación' }}</small>
                                 </div>
                                 <dl>
                                     <div><dt>Nombre</dt><dd>{{ pozo.nombre }}</dd></div>
+                                    <div><dt>Elemento</dt><dd>{{ pozo.elemento or 'No disponible' }}</dd></div>
                                     <div><dt>Instalación</dt><dd>{{ pozo.fecha_instalacion or 'No disponible' }}</dd></div>
                                     <div><dt>Tipo</dt><dd>{{ pozo.tipo or 'No disponible' }}</dd></div>
                                     <div><dt>Servicio</dt><dd>{{ pozo.servicio or 'No disponible' }}</dd></div>

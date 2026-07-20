@@ -35,6 +35,9 @@ Calculadora_Python.pptx
 docs/PYP-SM-EKBALAM-ENTREGABLES_OT1_08Jul26.docx
 docs/PYP-SM-EKBALAM-ENTREGABLES_OT1_08Jul26.pdf
 
+#Documentos que utilizo para la base de datos no requiero cargar
+*.xlsx
+
 # Logs
 *.log
 

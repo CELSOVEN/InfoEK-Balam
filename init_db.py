@@ -110,13 +110,21 @@ def cargar_pozos():
     nuevos = 0
 
     existentes = {
-        pozo.pozos.strip().lower(): pozo
+        pozo.nombre.strip().lower(): pozo
         for pozo in Pozo.query.all()
-        if pozo.pozos
+        if pozo.nombre
     }
 
+    nombres_vigentes = {
+        datos["nombre"].strip().lower() for datos in POZOS_INICIALES
+    }
+
+    for identificador, pozo in existentes.items():
+        if identificador not in nombres_vigentes:
+            pozo.activo = False
+
     for datos in POZOS_INICIALES:
-        identificador = datos["pozos"].strip().lower()
+        identificador = datos["nombre"].strip().lower()
         pozo = existentes.get(identificador)
 
         if pozo is not None:

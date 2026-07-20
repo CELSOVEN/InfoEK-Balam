@@ -62,6 +62,11 @@ class Pozo(db.Model):
         nullable=False
     )
 
+    elemento = db.Column(
+        db.String(250),
+        nullable=True
+    )
+
     plataforma = db.Column(
         db.String(100),
         nullable=True

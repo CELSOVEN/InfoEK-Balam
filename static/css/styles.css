@@ -114,6 +114,15 @@ body {
     margin-bottom: 18px;
 }
 
+.imagen-entrada-portal {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 18px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 12%);
+}
+
 label {
     font-weight: 600;
 }
