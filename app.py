@@ -90,7 +90,15 @@ def obtener_pozos_por_plataforma():
     pozos = (
         Pozo.query
         .filter_by(activo=True)
-        .order_by(Pozo.plataforma, Pozo.servicio, Pozo.pozos)
+        .order_by(
+            Pozo.plataforma,
+            db.case(
+                (db.func.lower(Pozo.elemento) == "center of structure", 1),
+                else_=0,
+            ),
+            Pozo.servicio,
+            Pozo.pozos,
+        )
         .all()
     )
 
