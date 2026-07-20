@@ -860,6 +860,20 @@ pre {
     text-align: right;
 }
 
+.ficha-pozo-inyeccion .ficha-pozo-titulo {
+    color: #17384d;
+    background: #bfe3f7;
+}
+
+.ficha-pozo-inyeccion .ficha-pozo-titulo small {
+    color: #315b73;
+}
+
+.ficha-centro-estructura {
+    background: #fff3a6;
+    border-color: #e0c84f;
+}
+
 .ficha-pozo dl {
     margin: 0;
     padding: 6px 15px 12px;

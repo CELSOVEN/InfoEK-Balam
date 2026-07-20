@@ -93,8 +93,13 @@ def obtener_pozos_por_plataforma():
         .order_by(
             Pozo.plataforma,
             db.case(
-                (db.func.lower(Pozo.elemento) == "center of structure", 1),
-                else_=0,
+                (db.func.lower(Pozo.servicio) == "production", 0),
+                (
+                    db.func.lower(Pozo.servicio).in_(("injection", "inyection")),
+                    1,
+                ),
+                (db.func.lower(Pozo.elemento) == "center of structure", 2),
+                else_=1,
             ),
             Pozo.servicio,
             Pozo.pozos,

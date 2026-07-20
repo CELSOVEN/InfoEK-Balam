@@ -44,7 +44,7 @@
                     <h3>Información de pozos en {{ plataforma }}</h3>
                     <div class="rejilla-pozos">
                         {% for pozo in pozos %}
-                            <article class="ficha-pozo" data-cantidad-produccion="{{ pozo.numero_pozos or 0 if pozo.servicio == 'Production' else 0 }}">
+                            <article class="ficha-pozo{% if pozo.servicio in ['Injection', 'Inyection'] %} ficha-pozo-inyeccion{% elif pozo.elemento == 'Center of Structure' %} ficha-centro-estructura{% endif %}" data-cantidad-produccion="{{ pozo.numero_pozos or 0 if pozo.servicio == 'Production' else 0 }}">
                                 {% if pozo.elemento != 'Center of Structure' %}
                                     <div class="ficha-pozo-titulo">
                                         <span>{{ pozo.pozos or pozo.elemento or pozo.plataforma }}</span>
