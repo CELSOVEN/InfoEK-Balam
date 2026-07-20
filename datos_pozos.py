@@ -1,122 +1,20 @@
-"""Carga los datos maestros desde ``data/platforms_wells2.xlsx``.
+"""Datos maestros de plataformas y pozos.
 
-Se usa únicamente la biblioteca estándar para no añadir una dependencia de
-lectura de Excel al despliegue de la aplicación.
+Los registros estan incluidos en la aplicacion para que el despliegue no
+dependa de archivos Excel externos. app.py e init_db.py sincronizan estos
+datos con la base de datos al iniciar.
 """
 
-from datetime import datetime, timedelta
-from pathlib import Path
-import re
-from xml.etree import ElementTree
-from zipfile import ZipFile
+import base64
+import json
+import zlib
 
 
-ARCHIVO_POZOS = Path(__file__).parent / "data" / "platforms_wells2.xlsx"
-NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+_DATOS_COMPRIMIDOS = (
+    "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"
+)
 
 
-def _indice_columna(referencia):
-    letras = re.match(r"[A-Z]+", referencia).group()
-    indice = 0
-    for letra in letras:
-        indice = indice * 26 + ord(letra) - ord("A") + 1
-    return indice - 1
-
-
-def _fecha_excel(valor):
-    if not valor:
-        return ""
-    try:
-        fecha = datetime(1899, 12, 30) + timedelta(days=float(valor))
-    except (TypeError, ValueError):
-        return str(valor)
-    return fecha.strftime("%d-%b-%Y")
-
-
-def _numero(valor):
-    if not valor:
-        return ""
-    try:
-        return f"{float(valor):.10g}"
-    except (TypeError, ValueError):
-        return str(valor).strip()
-
-
-def _leer_filas():
-    with ZipFile(ARCHIVO_POZOS) as libro:
-        compartidas = []
-        if "xl/sharedStrings.xml" in libro.namelist():
-            raiz = ElementTree.fromstring(libro.read("xl/sharedStrings.xml"))
-            compartidas = [
-                "".join(texto.text or "" for texto in elemento.iter(f"{{{NS}}}t"))
-                for elemento in raiz
-            ]
-
-        hoja = ElementTree.fromstring(libro.read("xl/worksheets/sheet1.xml"))
-        filas = hoja.findall(f".//{{{NS}}}sheetData/{{{NS}}}row")[3:]
-
-        for fila in filas:
-            valores = [""] * 16
-            for celda in fila.findall(f"{{{NS}}}c"):
-                indice = _indice_columna(celda.attrib["r"])
-                if indice >= len(valores):
-                    continue
-                nodo_valor = celda.find(f"{{{NS}}}v")
-                valor = "" if nodo_valor is None else nodo_valor.text
-                if celda.attrib.get("t") == "s" and valor:
-                    valor = compartidas[int(valor)]
-                valores[indice] = valor
-            yield valores[1:16]
-
-
-def _crear_registro(fila):
-    (elemento, plataforma, fecha_instalacion, tipo, servicio,
-     profundidad_agua, numero_pozos, pozos, coordenada_x, coordenada_y,
-     tipo_perforacion, inicio_perforacion, fin_perforacion,
-     profundidad_total, profundidad_vertical) = fila
-
-    elemento = elemento.strip()
-    plataforma = plataforma.strip()
-    pozos = pozos.strip()
-    es_centro = elemento.casefold() == "center of structure"
-    nombre = elemento or f"{plataforma} ({servicio or 'registro'})"
-    if es_centro:
-        # ``nombre`` era único en las primeras versiones de la base de datos.
-        nombre = f"Center of Structure - {plataforma}"
-
-    coordenadas = " / ".join(
-        valor for valor in (_numero(coordenada_x), _numero(coordenada_y)) if valor
-    )
-    try:
-        cantidad = int(float(numero_pozos)) if numero_pozos else None
-    except ValueError:
-        cantidad = None
-
-    datos = {
-        "nombre": nombre,
-        "elemento": elemento,
-        "plataforma": plataforma,
-        "fecha_instalacion": fecha_instalacion.strip(),
-        "tipo": tipo.strip(),
-        "servicio": servicio.strip(),
-        "profundidad_agua": _numero(profundidad_agua),
-        "numero_pozos": cantidad,
-        "pozos": pozos,
-        "coordenadas_utm": coordenadas,
-        "tipo_perforacion": tipo_perforacion.strip(),
-        "inicio_perforacion": _fecha_excel(inicio_perforacion),
-        "fin_perforacion": _fecha_excel(fin_perforacion),
-        "profundidad_total": _numero(profundidad_total),
-        "profundidad_vertical": _numero(profundidad_vertical),
-    }
-    datos["palabras_clave"] = " ".join(
-        str(valor) for valor in (
-            elemento, pozos, plataforma, fecha_instalacion, tipo, servicio,
-            tipo_perforacion, "centro estructura" if es_centro else "pozos plataforma",
-        ) if valor
-    )
-    datos["activo"] = True
-    return datos
-
-
-POZOS_INICIALES = [_crear_registro(fila) for fila in _leer_filas()]
+POZOS_INICIALES = json.loads(
+    zlib.decompress(base64.b64decode(_DATOS_COMPRIMIDOS)).decode("utf-8")
+)
