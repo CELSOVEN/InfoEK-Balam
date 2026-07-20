@@ -1,0 +1,25 @@
+{% macro icono_contenido(slug) %}
+<svg class="icono-contenido" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+    {% if slug == 'overview' %}
+        <circle cx="24" cy="24" r="18"/><path d="m29 19-3 7-7 3 3-7 7-3Z"/><circle cx="24" cy="24" r="2"/>
+    {% elif slug == 'executive-summary' %}
+        <path d="M9 38V10M9 38h31"/><path d="m14 31 8-9 7 5 10-13"/><circle cx="14" cy="31" r="2"/><circle cx="22" cy="22" r="2"/><circle cx="29" cy="27" r="2"/><circle cx="39" cy="14" r="2"/>
+    {% elif slug == 'information-gathering' %}
+        <path d="M13 6h16l8 8v15"/><path d="M29 6v8h8M13 6v36h17"/><circle cx="34" cy="34" r="7"/><path d="m39 39 4 4M18 20h13M18 26h9"/>
+    {% elif slug == 'well-master-files' %}
+        <path d="M24 5v8M18 13h12l-2 27h-8l-2-27ZM18 18h12M20 25h8M21 32h6"/><path d="M13 40h22"/>
+    {% elif slug == 'production-history' %}
+        <path d="M24 5C18 14 13 20 13 28a11 11 0 0 0 22 0c0-8-5-14-11-23Z"/><path d="M19 31c1 4 4 6 8 6"/>
+    {% elif slug == 'platform-offshore-facilities' %}
+        <path d="M7 39h34M11 39l5-23h16l5 23M14 27h20M17 16l7-8 8 8M20 27v12M28 27v12"/><path d="M5 43c3-2 5-2 8 0s5 2 8 0 5-2 8 0 5 2 8 0 5-2 7 0"/>
+    {% elif slug == 'regulatory-sener' %}
+        <path d="M24 5 39 11v10c0 10-6 18-15 22C15 39 9 31 9 21V11l15-6Z"/><path d="m17 24 5 5 10-11"/>
+    {% elif slug == 'detailed-documents' %}
+        <rect x="11" y="8" width="26" height="35" rx="3"/><path d="M18 8V5h12v3M17 17h14M17 24h14M17 31h9M17 37h12"/>
+    {% elif slug == 'operational-history' %}
+        <circle cx="24" cy="24" r="7"/><path d="M24 5v5M24 38v5M5 24h5M38 24h5M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/><circle cx="24" cy="24" r="15"/>
+    {% else %}
+        <circle cx="24" cy="24" r="18"/><path d="m15 24 6 6 12-13"/>
+    {% endif %}
+</svg>
+{% endmacro %}

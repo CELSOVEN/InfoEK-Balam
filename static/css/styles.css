@@ -629,12 +629,23 @@ pre {
     gap: 20px;
 }
 .tarjeta-contenido {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    color: inherit;
+    text-decoration: none;
     border-top: 3px solid transparent;
 
     transition:
         border-color 0.2s ease,
         transform 0.2s ease,
         box-shadow 0.2s ease;
+}
+
+.tarjeta-contenido:focus-visible {
+    outline: 3px solid rgb(167 25 31 / 35%);
+    outline-offset: 3px;
+    border-top-color: var(--rojo-principal);
 }
 
 
@@ -644,12 +655,6 @@ pre {
 
 .tarjeta-contenido p {
     flex: 1;
-}
-
-.tarjeta-contenido a {
-    color: #0052cc;
-    font-weight: 700;
-    text-decoration: none;
 }
 
 .categoria {
@@ -858,6 +863,34 @@ pre {
 .ficha-pozo-titulo small {
     color: #e5e5e5;
     text-align: right;
+}
+
+.encabezado-tarjeta-contenido {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.icono-contenido {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    padding: 7px;
+    color: var(--rojo-principal);
+    background: var(--rojo-claro);
+    border: 1px solid rgb(167 25 31 / 22%);
+    border-radius: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.tarjeta-contenido:hover .icono-contenido {
+    color: var(--blanco);
+    background: var(--rojo-principal);
 }
 
 .ficha-pozo-inyeccion .ficha-pozo-titulo {

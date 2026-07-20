@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_explorador_pozos.html" import explorador_pozos %}
+{% from "_iconos_contenido.html" import icono_contenido %}
 
 {% block title %}
     Portal | InfoEk-Balam
@@ -342,10 +343,16 @@
 
         {% for contenido in contenidos %}
 
-            <article class="tarjeta-contenido">
-                <span class="categoria">
-                    {{ contenido.categoria }}
-                </span>
+            <a
+                class="tarjeta-contenido"
+                href="{{ url_for(
+                    'ver_contenido',
+                    slug=contenido.slug
+                ) }}"
+            >
+                <div class="encabezado-tarjeta-contenido">
+                    {{ icono_contenido(contenido.slug) }}
+                </div>
 
                 <h3>
                     {{ contenido.titulo }}
@@ -354,16 +361,7 @@
                 <p>
                     {{ contenido.resumen }}
                 </p>
-
-                <a
-                    href="{{ url_for(
-                        'ver_contenido',
-                        slug=contenido.slug
-                    ) }}"
-                >
-                    Ver →
-                </a>
-            </article>
+            </a>
 
         {% endfor %}
 
