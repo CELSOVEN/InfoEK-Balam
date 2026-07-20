@@ -1030,6 +1030,103 @@ pre {
     border-color: #e0c84f;
 }
 
+.historial-produccion-plataforma {
+    margin: 28px 0 0;
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 6%);
+}
+
+.selector-historiales {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f7f7f7;
+    border: 1px solid var(--gris-suave);
+    border-radius: 10px;
+}
+
+.encabezado-selector-historiales h4 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.encabezado-selector-historiales p {
+    margin: 3px 0 0;
+    color: var(--gris-medio);
+}
+
+.botones-historiales {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 16px;
+}
+
+.boton-historial-plataforma {
+    padding: 9px 14px;
+    color: var(--rojo-oscuro);
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: var(--blanco);
+    border: 1px solid #dbaeb1;
+}
+
+.boton-historial-plataforma:hover,
+.boton-historial-plataforma[aria-pressed="true"] {
+    color: var(--blanco);
+    background: var(--rojo-principal);
+}
+
+.estado-selector-historial {
+    margin: 14px 0 0;
+    color: var(--gris-medio);
+    font-size: 0.88rem;
+}
+
+.panel-historial-produccion {
+    margin: 14px 0 0;
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 8px;
+}
+
+.panel-historial-produccion figcaption {
+    padding: 11px 14px;
+    color: var(--blanco);
+    font-weight: 700;
+    background: var(--gris-oscuro);
+}
+
+.historial-produccion-plataforma figcaption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    color: var(--blanco);
+    background: var(--gris-oscuro);
+}
+
+.historial-produccion-plataforma figcaption span {
+    color: #dedede;
+    font-size: 0.82rem;
+}
+
+.visor-historial-produccion {
+    display: block;
+    overflow-x: auto;
+    background: #f7f7f7;
+}
+
+.visor-historial-produccion img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .ficha-pozo dl {
     margin: 0;
     padding: 6px 15px 12px;
@@ -1354,6 +1451,18 @@ pre {
     .contenidos-del-grupo { padding: 12px; }
     .cabecera-contenido-abierto { gap: 14px; }
     .cabecera-contenido-abierto h3 { font-size: 1.25rem; }
+    .historial-produccion-plataforma figcaption {
+        display: block;
+        padding: 12px 14px;
+    }
+    .historial-produccion-plataforma figcaption span {
+        display: block;
+        margin-top: 3px;
+    }
+    .visor-historial-produccion img {
+        width: 900px;
+        max-width: none;
+    }
     .explorador-pozos-encabezado { display: block; }
     .selector-plataforma { margin-top: 18px; }
     .rejilla-pozos { grid-template-columns: 1fr; }

@@ -36,6 +36,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    document.querySelectorAll("[data-selector-historiales]").forEach((selector) => {
+        const botones = selector.querySelectorAll("[data-mostrar-historial]");
+        const paneles = selector.querySelectorAll("[data-panel-historial]");
+        const estado = selector.querySelector("[data-estado-historial]");
+
+        botones.forEach((boton) => {
+            boton.addEventListener("click", () => {
+                const identificador = boton.dataset.mostrarHistorial;
+
+                botones.forEach((elemento) => {
+                    elemento.setAttribute("aria-pressed", String(elemento === boton));
+                });
+
+                paneles.forEach((panel) => {
+                    const activo = panel.dataset.panelHistorial === identificador;
+                    panel.hidden = !activo;
+
+                    if (activo) {
+                        const imagen = panel.querySelector("img[data-src]");
+                        if (imagen && !imagen.hasAttribute("src")) {
+                            imagen.src = imagen.dataset.src;
+                        }
+                    }
+                });
+
+                estado.textContent = `Mostrando historial de producción de ${boton.textContent.trim()}.`;
+            });
+        });
+    });
+
     const botonMenu = document.querySelector(".boton-menu-movil");
     const menuMovil = document.querySelector(".menu-movil");
 

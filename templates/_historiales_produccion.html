@@ -1,0 +1,52 @@
+{% macro selector_historiales(historiales_por_plataforma, prefijo) %}
+    {% if historiales_por_plataforma %}
+        <section class="selector-historiales" data-selector-historiales>
+            <div class="encabezado-selector-historiales">
+                <h4>Historial por plataforma</h4>
+                <p>Selecciona una plataforma para consultar su historial de producción.</p>
+            </div>
+
+            <div class="botones-historiales" role="group" aria-label="Plataformas con historial de producción">
+                {% for plataforma, archivo in historiales_por_plataforma.items() %}
+                    <button
+                        type="button"
+                        class="boton-historial-plataforma"
+                        aria-pressed="false"
+                        aria-controls="{{ prefijo }}-historial-{{ loop.index }}"
+                        data-mostrar-historial="{{ loop.index }}"
+                    >
+                        {{ plataforma }}
+                    </button>
+                {% endfor %}
+            </div>
+
+            <p class="estado-selector-historial" data-estado-historial>
+                Elige una plataforma para mostrar la gráfica.
+            </p>
+
+            {% for plataforma, archivo in historiales_por_plataforma.items() %}
+                <figure
+                    id="{{ prefijo }}-historial-{{ loop.index }}"
+                    class="panel-historial-produccion"
+                    data-panel-historial="{{ loop.index }}"
+                    hidden
+                >
+                    <figcaption>Historial de producción de {{ plataforma }}</figcaption>
+                    <a
+                        class="visor-historial-produccion"
+                        href="{{ url_for('static', filename='img/plataformas_pozos/' ~ archivo) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Abrir historial de producción de {{ plataforma }} a tamaño completo"
+                    >
+                        <img
+                            data-src="{{ url_for('static', filename='img/plataformas_pozos/' ~ archivo) }}"
+                            alt="Historial de producción de la plataforma {{ plataforma }}"
+                            decoding="async"
+                        >
+                    </a>
+                </figure>
+            {% endfor %}
+        </section>
+    {% endif %}
+{% endmacro %}

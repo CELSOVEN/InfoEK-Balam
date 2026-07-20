@@ -1,4 +1,4 @@
-{% macro explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, prefijo) %}
+{% macro explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, historiales_por_plataforma, prefijo) %}
     {% if pozos_por_plataforma %}
         <section class="explorador-pozos" aria-labelledby="{{ prefijo }}-titulo-explorador-pozos" data-explorador-pozos>
             <div class="explorador-pozos-encabezado">
@@ -75,6 +75,30 @@
                             </article>
                         {% endfor %}
                     </div>
+
+                    {% set historial_produccion = historiales_por_plataforma.get(plataforma) %}
+                    {% if historial_produccion %}
+                        <figure class="historial-produccion-plataforma">
+                            <figcaption>
+                                <strong>Historial de producción de {{ plataforma }}</strong>
+                                <span>Selecciona la imagen para consultarla a tamaño completo.</span>
+                            </figcaption>
+                            <a
+                                class="visor-historial-produccion"
+                                href="{{ url_for('static', filename='img/plataformas_pozos/' ~ historial_produccion) }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Abrir historial de producción de {{ plataforma }} a tamaño completo"
+                            >
+                                <img
+                                    src="{{ url_for('static', filename='img/plataformas_pozos/' ~ historial_produccion) }}"
+                                    alt="Historial de producción de la plataforma {{ plataforma }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
+                            </a>
+                        </figure>
+                    {% endif %}
                 </div>
             {% endfor %}
         </section>

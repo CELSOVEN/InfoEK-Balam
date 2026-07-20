@@ -73,6 +73,18 @@ PLATAFORMAS_BUSQUEDA = {
     },
 }
 
+HISTORIALES_PRODUCCION = {
+    "Balam-A": "Balam-A_HistorialProduccion.png",
+    "Balam-TA": "Balam-TA_HistorialProduccion.png",
+    "Balam-TA2": "Balam-TA2_HistorialProduccion.png",
+    "Balam-TB": "Balam-TB_HistorialProduccion.png",
+    "Balam-TE": "Balam-TE_HistorialProduccion.png",
+    "Ek-A": "EK-A_HistorialProduccion.png",
+    "Ek-A2": "EK-A2_HistorialProduccion.png",
+    "Ek-TA": "EK-TA_HistorialProduccion.png",
+    "Ek-TB": "EK-TB_HistorialProduccion.png",
+}
+
 
 def buscar_plataforma(termino):
     termino_normalizado = termino.upper().replace("_", "-")
@@ -123,6 +135,19 @@ def obtener_imagenes_por_plataforma(pozos_por_plataforma):
             {}
         ).get("imagen")
         for plataforma in pozos_por_plataforma
+    }
+
+
+def obtener_historiales_por_plataforma(pozos_por_plataforma=None):
+    plataformas = (
+        pozos_por_plataforma
+        if pozos_por_plataforma is not None
+        else HISTORIALES_PRODUCCION
+    )
+    return {
+        plataforma: HISTORIALES_PRODUCCION[plataforma]
+        for plataforma in plataformas
+        if plataforma in HISTORIALES_PRODUCCION
     }
 
 
@@ -281,6 +306,9 @@ def portal():
     imagenes_por_plataforma = obtener_imagenes_por_plataforma(
         pozos_por_plataforma
     )
+    historiales_por_plataforma = obtener_historiales_por_plataforma(
+        pozos_por_plataforma
+    )
 
     return render_template(
         "portal.html",
@@ -288,6 +316,7 @@ def portal():
         documentos_biblioteca=documentos_biblioteca,
         pozos_por_plataforma=pozos_por_plataforma,
         imagenes_por_plataforma=imagenes_por_plataforma,
+        historiales_por_plataforma=historiales_por_plataforma,
         total_pozos=db.session.query(
             db.func.coalesce(db.func.sum(Pozo.numero_pozos), 0)
         ).filter(
@@ -331,6 +360,9 @@ def ver_contenido(slug):
     imagenes_por_plataforma = obtener_imagenes_por_plataforma(
         pozos_por_plataforma
     )
+    historiales_por_plataforma = obtener_historiales_por_plataforma(
+        None if slug == "production-history" else pozos_por_plataforma
+    )
 
     return render_template(
         "contenido.html",
@@ -338,6 +370,7 @@ def ver_contenido(slug):
         contenidos_menu=contenidos_menu,
         pozos_por_plataforma=pozos_por_plataforma,
         imagenes_por_plataforma=imagenes_por_plataforma,
+        historiales_por_plataforma=historiales_por_plataforma,
     )
 
 @app.route("/buscar")

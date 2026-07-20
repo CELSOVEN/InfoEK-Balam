@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_explorador_pozos.html" import explorador_pozos %}
 {% from "_iconos_contenido.html" import icono_contenido %}
+{% from "_historiales_produccion.html" import selector_historiales %}
 
 {% block title %}
     Portal | InfoEk-Balam
@@ -327,7 +328,7 @@
     </div>
 
     <div class="modal-plataformas-contenido modal-pozos-contenido">
-        {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal") }}
+        {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, historiales_por_plataforma, "portal") }}
     </div>
 </dialog>
 
@@ -398,8 +399,12 @@
                                     {% endfor %}
                                 </div>
 
+                                {% if contenido.slug == 'production-history' %}
+                                    {{ selector_historiales(historiales_por_plataforma, "portal-produccion") }}
+                                {% endif %}
+
                                 {% if contenido.slug == 'well-master-files' %}
-                                    {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal-contenido") }}
+                                    {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, historiales_por_plataforma, "portal-contenido") }}
                                 {% endif %}
                             </article>
                         {% endif %}
