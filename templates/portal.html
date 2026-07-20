@@ -343,25 +343,36 @@
 
         {% for contenido in contenidos %}
 
-            <a
-                class="tarjeta-contenido"
-                href="{{ url_for(
-                    'ver_contenido',
-                    slug=contenido.slug
-                ) }}"
+            <article
+                id="{{ contenido.slug }}"
+                class="contenido-abierto"
             >
-                <div class="encabezado-tarjeta-contenido">
+                <div class="cabecera-contenido-abierto">
                     {{ icono_contenido(contenido.slug) }}
+
+                    <div>
+                        <h3>
+                            {{ contenido.titulo }}
+                        </h3>
+
+                        <p class="resumen-contenido-abierto">
+                            {{ contenido.resumen }}
+                        </p>
+                    </div>
                 </div>
 
-                <h3>
-                    {{ contenido.titulo }}
-                </h3>
+                <div class="texto-contenido texto-contenido-abierto">
+                    {% for parrafo in contenido.contenido.split('\n\n') %}
+                        {% if parrafo.strip() %}
+                            <p>{{ parrafo.strip() }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-                <p>
-                    {{ contenido.resumen }}
-                </p>
-            </a>
+                {% if contenido.slug == 'well-master-files' %}
+                    {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, "portal-contenido") }}
+                {% endif %}
+            </article>
 
         {% endfor %}
 
