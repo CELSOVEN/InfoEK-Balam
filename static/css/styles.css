@@ -1133,19 +1133,54 @@ pre {
     background: var(--rojo-hover);
 }
 
-.historial-produccion-plataforma figcaption {
+.encabezado-historial-plataforma {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
     padding: 14px 18px;
     color: var(--blanco);
     background: var(--gris-oscuro);
+    cursor: pointer;
+    list-style: none;
 }
 
-.historial-produccion-plataforma figcaption span {
+.encabezado-historial-plataforma::-webkit-details-marker {
+    display: none;
+}
+
+.encabezado-historial-plataforma strong,
+.encabezado-historial-plataforma small {
+    display: block;
+}
+
+.encabezado-historial-plataforma small {
+    margin-top: 2px;
     color: #dedede;
     font-size: 0.82rem;
+}
+
+.accion-historial-plataforma {
+    flex: 0 0 auto;
+    padding: 7px 11px;
+    color: var(--blanco);
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--rojo-principal);
+    border: 1px solid rgb(255 255 255 / 35%);
+    border-radius: 6px;
+}
+
+.texto-mostrar-historial {
+    display: none;
+}
+
+.historial-produccion-plataforma:not([open]) .texto-cerrar-historial {
+    display: none;
+}
+
+.historial-produccion-plataforma:not([open]) .texto-mostrar-historial {
+    display: inline;
 }
 
 .visor-historial-produccion {
@@ -1488,13 +1523,14 @@ pre {
     .contenidos-del-grupo { padding: 12px; }
     .cabecera-contenido-abierto { gap: 14px; }
     .cabecera-contenido-abierto h3 { font-size: 1.25rem; }
-    .historial-produccion-plataforma figcaption {
-        display: block;
+    .encabezado-historial-plataforma {
+        align-items: flex-start;
+        flex-direction: column;
         padding: 12px 14px;
     }
-    .historial-produccion-plataforma figcaption span {
-        display: block;
-        margin-top: 3px;
+    .accion-historial-plataforma {
+        align-self: stretch;
+        text-align: center;
     }
     .panel-historial-produccion figcaption {
         flex-wrap: wrap;
