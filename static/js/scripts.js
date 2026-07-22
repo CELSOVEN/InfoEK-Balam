@@ -109,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const etiquetasVariablesProduccion = {
         gas: "GAS (MPCD)",
-        agua: "AGUA (MBD)",
-        aceite: "ACEITE (MBD)",
+        agua: "AGUA (bpd)",
+        aceite: "ACEITE (bpd)",
         goc: "GOR (pcd/bd)",
     };
 
@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
         || b.y + b.alto < a.y
     );
 
-    const dibujarEtiquetaNodo = (contexto, etiquetas, texto, x, y, limites) => {
+    const dibujarEtiquetaNodo = (contexto, etiquetas, texto, x, y, limites, color = "#292929") => {
         contexto.font = "11px Arial";
         const anchoTexto = contexto.measureText(texto).width;
         const opciones = [
@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             contexto.fillStyle = "rgba(255, 255, 255, 0.86)";
             contexto.fillRect(rectangulo.x, rectangulo.y, rectangulo.ancho, rectangulo.alto);
-            contexto.fillStyle = "#292929";
+            contexto.fillStyle = color;
             contexto.textAlign = "center";
             contexto.fillText(texto, rectangulo.x + rectangulo.ancho / 2, rectangulo.y + 12);
             etiquetas.push(rectangulo);
@@ -738,7 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inferior: margen.superior + altoPlot,
         };
         const mostrarEtiquetasNodos = !esMovil;
-        const mostrarEtiquetasSerie = !esMovil || lineas.length === 1;
+        const mostrarEtiquetasSerie = periodos.length === 1 && !esMovil;
         const radioPunto = esMovil ? 2.6 : 3;
         const grosorLinea = esMovil ? 2.4 : 2;
         const yParaValor = (valor, eje) => {
@@ -858,6 +858,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         x + barraAncho / 2,
                         y,
                         limitesEtiquetas,
+                        linea.color,
                     );
                 }
                 if (mostrarEtiquetasSerie) {
@@ -917,6 +918,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             punto.x,
                             punto.y,
                             limitesEtiquetas,
+                            linea.color,
                         );
                     }
                 });
@@ -1046,9 +1048,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tbody.innerHTML = filas.map((fila) => `<tr>${columnas.map((columna) => {
             const valor = fila[columna] ?? "";
+            const valorMostrado = typeof valor === "number" && variablesGraficaProduccion[columna]
+                ? variablesGraficaProduccion[columna].convertir(valor)
+                : valor;
             const texto = columna === "periodo"
                 ? formatearPeriodoProduccion(valor)
-                : typeof valor === "number" ? formatoNumero.format(valor) : valor;
+                : typeof valorMostrado === "number" ? formatoNumero.format(valorMostrado) : valorMostrado;
             return `<td>${texto}</td>`;
         }).join("")}</tr>`).join("");
     };

@@ -1851,9 +1851,9 @@ input:focus {
 
 .pie-grafica-produccion span {
     color: var(--negro);
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: Arial, sans-serif;
     font-size: 1rem;
-    font-style: italic;
+    font-style: normal;
     line-height: 1.2;
 }
 
