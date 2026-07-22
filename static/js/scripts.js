@@ -548,6 +548,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     etiquetaGrafica: variasVariables ? `${serieCorta} ${meta.etiquetaCorta}` : serieCorta,
                     color: coloresVariablesProduccion[variableActual]
                         || coloresProduccion[indice % coloresProduccion.length],
+                    colorTexto: coloresTextoVariablesProduccion[variableActual]
+                        || coloresVariablesProduccion[variableActual]
+                        || coloresProduccion[indice % coloresProduccion.length],
                     puntos,
                 });
             });
@@ -858,7 +861,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         x + barraAncho / 2,
                         y,
                         limitesEtiquetas,
-                        linea.color,
+                        linea.colorTexto,
                     );
                 }
                 if (mostrarEtiquetasSerie) {
@@ -868,7 +871,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         linea.etiquetaGrafica,
                         x + barraAncho / 2,
                         y + Math.max(12, altoBarra / 2),
-                        linea.color,
+                        linea.colorTexto,
                         limitesEtiquetas,
                     );
                 }
@@ -901,7 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         linea.etiquetaGrafica,
                         ultimoPunto.x,
                         ultimoPunto.y,
-                        linea.color,
+                        linea.colorTexto,
                         limitesEtiquetas,
                     );
                 }
@@ -918,7 +921,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             punto.x,
                             punto.y,
                             limitesEtiquetas,
-                            linea.color,
+                            linea.colorTexto,
                         );
                     }
                 });
