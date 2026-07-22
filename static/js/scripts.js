@@ -166,6 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
         "#626f86",
     ];
 
+    const textosPeriodoGraficaProduccion = {
+        semestre: "Datos mostrados de forma semestral",
+        trimestre: "Datos mostrados de forma trimestral",
+        anio: "Datos mostrados de forma anual",
+        total: "Datos mostrados como acumulado total",
+    };
+
     const serieProduccion = (fila) => [fila.campo, fila.plataforma, fila.pozo]
         .filter(Boolean)
         .join(" / ") || "TOTAL";
@@ -896,6 +903,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    const actualizarPieGraficaProduccion = (elemento, intervalo) => {
+        if (!elemento) return;
+
+        elemento.textContent = textosPeriodoGraficaProduccion[intervalo]
+            || "Datos mostrados de acuerdo con el intervalo seleccionado";
+    };
+
     const limpiarResultadosProduccion = (tabla, canvas, leyenda, mensaje = "Selecciona filtros para consultar.") => {
         const thead = tabla.querySelector("thead");
         const tbody = tabla.querySelector("tbody");
@@ -975,6 +989,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectorVariable = panel.querySelector("[data-variable-grafica]");
         const leyenda = panel.querySelector("[data-leyenda-produccion]");
         const tooltip = panel.querySelector("[data-tooltip-produccion]");
+        const pieGrafica = panel.querySelector("[data-pie-grafica-produccion]");
         let filasActuales = [];
         let variablesActuales = [...ordenVariablesGrafica];
         let temporizadorConsulta = null;
@@ -1007,6 +1022,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (formulario.fecha_inicio.value) parametros.set("fecha_inicio", formulario.fecha_inicio.value);
             if (formulario.fecha_fin.value) parametros.set("fecha_fin", formulario.fecha_fin.value);
+            actualizarPieGraficaProduccion(pieGrafica, formulario.intervalo.value);
 
             estado.textContent = "Consultando producción...";
             const respuesta = await fetch(`/api/produccion?${parametros.toString()}`);
@@ -1040,7 +1056,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         formulario.querySelectorAll('[name="intervalo"], [name="fecha_inicio"], [name="fecha_fin"]').forEach((control) => {
-            control.addEventListener("change", programarConsultaProduccion);
+            control.addEventListener("change", () => {
+                if (control.name === "intervalo") {
+                    actualizarPieGraficaProduccion(pieGrafica, control.value);
+                }
+                programarConsultaProduccion();
+            });
         });
 
         formulario.querySelectorAll('[name="campo"]').forEach((control) => {
@@ -1097,6 +1118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tooltip) tooltip.hidden = true;
         });
 
+        actualizarPieGraficaProduccion(pieGrafica, formulario.intervalo.value);
         actualizarFiltrosProduccion(formulario);
         consultarProduccion();
     });
