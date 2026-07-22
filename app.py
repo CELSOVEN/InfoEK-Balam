@@ -129,6 +129,48 @@ def normalizar_lista_parametros(nombre):
     return [valor.strip().upper() for valor in valores if valor.strip()]
 
 
+def clave_resultado_variable(variable):
+    return "goc" if variable == "gor" else variable
+
+
+def fila_tiene_valores_positivos(fila, variables):
+    for variable in variables:
+        valor = fila.get(clave_resultado_variable(variable), 0)
+        try:
+            if float(valor or 0) > 0:
+                return True
+        except (TypeError, ValueError):
+            continue
+    return False
+
+
+def recortar_filas_a_periodos_productivos(filas, variables, intervalo):
+    if intervalo == "total" or not filas or not any("periodo" in fila for fila in filas):
+        return filas, None
+
+    periodos_productivos = [
+        fila["periodo"]
+        for fila in filas
+        if fila.get("periodo") and fila_tiene_valores_positivos(fila, variables)
+    ]
+
+    if not periodos_productivos:
+        return [], "sin_valores"
+
+    periodo_inicio = min(periodos_productivos)
+    periodo_fin = max(periodos_productivos)
+    filas_recortadas = [
+        fila
+        for fila in filas
+        if periodo_inicio <= fila.get("periodo", "") <= periodo_fin
+    ]
+
+    if len(filas_recortadas) == len(filas):
+        return filas, None
+
+    return filas_recortadas, "recortado"
+
+
 def fecha_periodo(intervalo):
     if intervalo == "anio":
         return db.func.strftime("%Y", ProduccionPozoMensual.fecha)
@@ -776,6 +818,20 @@ def api_produccion():
                 fila[clave] = 0
             elif isinstance(valor, float):
                 fila[clave] = round(valor, 4)
+
+    filas, ajuste_periodo = recortar_filas_a_periodos_productivos(
+        filas,
+        variables,
+        intervalo,
+    )
+    if ajuste_periodo == "recortado":
+        notas.append(
+            "Se omitieron periodos iniciales o finales sin datos mayores a cero."
+        )
+    elif ajuste_periodo == "sin_valores":
+        notas.append(
+            "No hay datos mayores a cero en las fechas seleccionadas."
+        )
 
     return {
         "filas": filas,
