@@ -2,6 +2,7 @@
 {% from "_explorador_pozos.html" import explorador_pozos %}
 {% from "_iconos_contenido.html" import icono_contenido %}
 {% from "_historiales_produccion.html" import selector_historiales %}
+{% from "_produccion_interactiva.html" import produccion_interactiva %}
 
 {% block title %}
     Portal | InfoEk-Balam
@@ -188,6 +189,19 @@
             Pozos de producci&oacute;n reportados
         </span>
     </article>
+
+    <a
+        class="indicador indicador-interactivo indicador-enlace indicador-produccion-historica"
+        href="{{ url_for('produccion_historica') }}"
+    >
+        <span class="indicador-numero indicador-numero-texto">
+            Hist&oacute;rico de producci&oacute;n
+        </span>
+
+        <span class="indicador-texto">
+            Consulta por campo, plataforma y pozo.
+        </span>
+    </a>
 </section>
 
 <dialog
@@ -260,12 +274,9 @@
             alt="Diagrama de ubicaci&oacute;n de las once plataformas del campo Ek-Balam"
             class="imagen-plataformas imagen-mapa-plataformas"
         >
-
-        <img
-            src="{{ url_for('static', filename='img/tabla_plataformas_pozos.png') }}"
-            alt="Tabla de plataformas y pozos del campo Ek-Balam"
-            class="imagen-plataformas imagen-plataformas-completa"
-        >
+        <div class="explorador-plataformas-dinamico">
+            {{ explorador_pozos(pozos_por_plataforma, imagenes_por_plataforma, {}, "portal-plataformas") }}
+        </div>
 
     </div>
 </dialog>
@@ -400,6 +411,7 @@
                                 </div>
 
                                 {% if contenido.slug == 'production-history' %}
+                                    {{ produccion_interactiva(opciones_produccion, "portal-produccion") }}
                                     {{ selector_historiales(historiales_por_plataforma, "portal-produccion") }}
                                 {% endif %}
 

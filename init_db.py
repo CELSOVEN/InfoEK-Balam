@@ -5,7 +5,8 @@ from database import db
 
 from contenido_inicial import CONTENIDOS_INICIALES
 from datos_pozos import POZOS_INICIALES
-from models import Usuario, Contenido, Pozo
+from datos_produccion import leer_produccion_excel
+from models import Usuario, Contenido, Pozo, ProduccionPozoMensual
 
 
 def crear_usuario_administrador():
@@ -149,6 +150,51 @@ def cargar_pozos():
     )
 
 
+
+def cargar_produccion_historica():
+    """
+    Inserta o actualiza la produccion historica mensual del Excel.
+    """
+
+    registros = leer_produccion_excel()
+
+    if not registros:
+        print("[AVISO] No se encontraron registros de produccion para cargar.")
+        return
+
+    existentes = {
+        (registro.campo, registro.plataforma, registro.pozo, registro.fecha): registro
+        for registro in ProduccionPozoMensual.query.all()
+    }
+
+    nuevos = 0
+
+    for datos in registros:
+        llave = (
+            datos["campo"],
+            datos["plataforma"],
+            datos["pozo"],
+            datos["fecha"],
+        )
+        registro = existentes.get(llave)
+
+        if registro is None:
+            db.session.add(ProduccionPozoMensual(**datos))
+            nuevos += 1
+            continue
+
+        for campo, valor in datos.items():
+            setattr(registro, campo, valor)
+
+    db.session.commit()
+
+    print(f"[OK] Nuevos registros de produccion: {nuevos}")
+    print(
+        "[OK] Total de registros de produccion: "
+        f"{ProduccionPozoMensual.query.count()}"
+    )
+
+
 def inicializar_base_datos():
     """
     Inicializa completamente la base de datos.
@@ -172,6 +218,8 @@ def inicializar_base_datos():
         cargar_contenidos()
 
         cargar_pozos()
+
+        cargar_produccion_historica()
 
         print(
             "\n[OK] Base de datos lista.\n"

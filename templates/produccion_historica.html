@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_produccion_interactiva.html" import produccion_interactiva %}
+
+{% block title %}
+    Hist&oacute;rico de producci&oacute;n | InfoEk-Balam
+{% endblock %}
+
+{% block body_class %}pagina-produccion-body{% endblock %}
+
+{% block content %}
+
+<section class="pagina-produccion-historica" id="contenido-principal">
+    <div class="encabezado-produccion-historica">
+        <div>
+            <span class="categoria">Producci&oacute;n</span>
+            <h1>Hist&oacute;rico de producci&oacute;n</h1>
+        </div>
+
+        <a class="volver-portal volver-produccion" href="{{ url_for('portal') }}">
+            &larr; Regresar al portal
+        </a>
+    </div>
+
+    {{ produccion_interactiva(opciones_produccion, "consulta-produccion") }}
+</section>
+
+{% endblock %}

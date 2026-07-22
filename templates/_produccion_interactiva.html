@@ -1,0 +1,124 @@
+{% macro produccion_interactiva(opciones_produccion, prefijo) %}
+    <section
+        class="produccion-interactiva"
+        data-produccion-interactiva
+        data-fecha-min="{{ opciones_produccion.fecha_min }}"
+        data-fecha-max="{{ opciones_produccion.fecha_max }}"
+    >
+        <div class="produccion-encabezado">
+            <div>
+                <h4>Consulta histórica de producción</h4>
+            </div>
+        </div>
+
+        <form class="formulario-produccion" data-formulario-produccion>
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-nivel">Agrupar por</label>
+                <select id="{{ prefijo }}-nivel" name="nivel">
+                    <option value="campo">Campo</option>
+                    <option value="plataforma">Plataforma</option>
+                    <option value="pozo">Pozo</option>
+                </select>
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-intervalo">Intervalo</label>
+                <select id="{{ prefijo }}-intervalo" name="intervalo">
+                    <option value="semestre">Semestral</option>
+                    <option value="trimestre">Trimestral</option>
+                    <option value="anio">Año</option>
+                    <option value="total">Total</option>
+                </select>
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-campo">Campo</label>
+                <select id="{{ prefijo }}-campo" name="campo">
+                    <option value="">Selecciona campo</option>
+                    {% for campo in opciones_produccion.campos %}
+                        <option value="{{ campo }}">{{ campo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-plataforma">Plataforma</label>
+                <select id="{{ prefijo }}-plataforma" name="plataforma">
+                    <option value="">Selecciona plataforma</option>
+                    {% for plataforma in opciones_produccion.plataformas %}
+                        <option
+                            value="{{ plataforma.nombre }}"
+                            data-campo="{{ plataforma.campo }}"
+                        >
+                            {{ plataforma.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-pozo">Pozo</label>
+                <select id="{{ prefijo }}-pozo" name="pozo">
+                    <option value="">Selecciona pozo</option>
+                    {% for pozo in opciones_produccion.pozos %}
+                        <option
+                            value="{{ pozo.nombre }}"
+                            data-campo="{{ pozo.campo }}"
+                            data-plataforma="{{ pozo.plataforma }}"
+                        >
+                            {{ pozo.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-fecha-inicio">Desde</label>
+                <input
+                    id="{{ prefijo }}-fecha-inicio"
+                    name="fecha_inicio"
+                    type="date"
+                    value="{{ opciones_produccion.fecha_min }}"
+                >
+            </div>
+
+            <div class="control-produccion">
+                <label for="{{ prefijo }}-fecha-fin">Hasta</label>
+                <input
+                    id="{{ prefijo }}-fecha-fin"
+                    name="fecha_fin"
+                    type="date"
+                    value="{{ opciones_produccion.fecha_max }}"
+                >
+            </div>
+
+        </form>
+
+        <div class="estado-produccion" data-estado-produccion>
+            Selecciona filtros para ver la producción.
+        </div>
+
+        <div class="panel-produccion-grafica">
+            <div class="barra-grafica-produccion">
+                <label for="{{ prefijo }}-variable-grafica">Gráfica</label>
+                <select id="{{ prefijo }}-variable-grafica" data-variable-grafica>
+                    <option value="todas">Todas las variables (2 ejes)</option>
+                    <option value="aceite">ACEITE (bpd)</option>
+                    <option value="agua">AGUA (bpd)</option>
+                    <option value="gas">GAS (MPCD)</option>
+                    <option value="goc">GOR (pcd/bd)</option>
+                </select>
+            </div>
+            <div class="leyenda-produccion" data-leyenda-produccion></div>
+            <canvas data-grafica-produccion height="460"></canvas>
+            <div class="tooltip-produccion" data-tooltip-produccion hidden></div>
+        </div>
+
+        <div class="tabla-produccion-contenedor">
+            <table class="tabla-produccion" data-tabla-produccion>
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+{% endmacro %}

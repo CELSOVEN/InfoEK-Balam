@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_explorador_pozos.html" import explorador_pozos %}
 {% from "_historiales_produccion.html" import selector_historiales %}
+{% from "_produccion_interactiva.html" import produccion_interactiva %}
 
 {% block title %}
     {{ contenido.titulo }} | InfoEk-Balam
@@ -71,6 +72,7 @@
         </div>
 
         {% if contenido.slug == 'production-history' %}
+            {{ produccion_interactiva(opciones_produccion, "contenido-produccion") }}
             {{ selector_historiales(historiales_por_plataforma, "contenido-produccion") }}
         {% endif %}
 

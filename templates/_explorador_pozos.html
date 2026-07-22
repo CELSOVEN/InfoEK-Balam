@@ -28,18 +28,6 @@
 
             {% for plataforma, pozos in pozos_por_plataforma.items() %}
                 <div class="grupo-pozos-plataforma" data-grupo-plataforma="{{ loop.index }}" data-plataforma="{{ plataforma }}" hidden>
-                    {% set imagen_plataforma = imagenes_por_plataforma.get(plataforma) %}
-                    {% if imagen_plataforma %}
-                        <figure class="detalle-pozos imagen-plataforma-filtrada">
-                            <figcaption>Plataforma {{ plataforma }}</figcaption>
-                            <img
-                                src="{{ url_for('static', filename='img/plataformas_pozos/' ~ imagen_plataforma) }}"
-                                alt="Información de pozos de la plataforma {{ plataforma }}"
-                                class="imagen-plataformas"
-                                loading="lazy"
-                            >
-                        </figure>
-                    {% endif %}
 
                     <h3>Información de pozos en {{ plataforma }}</h3>
                     <div class="rejilla-pozos">
@@ -75,36 +63,6 @@
                             </article>
                         {% endfor %}
                     </div>
-
-                    {% set historial_produccion = historiales_por_plataforma.get(plataforma) %}
-                    {% if historial_produccion %}
-                        <details class="historial-produccion-plataforma" open>
-                            <summary class="encabezado-historial-plataforma">
-                                <span>
-                                    <strong>Historial de producción de {{ plataforma }}</strong>
-                                    <small>Selecciona la imagen para abrirla ampliada en una nueva pestaña.</small>
-                                </span>
-                                <span class="accion-historial-plataforma">
-                                    <span class="texto-cerrar-historial">Cerrar historial</span>
-                                    <span class="texto-mostrar-historial">Mostrar historial</span>
-                                </span>
-                            </summary>
-                            <a
-                                class="visor-historial-produccion"
-                                href="{{ url_for('static', filename='img/plataformas_pozos/' ~ historial_produccion) }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Abrir historial de producción de {{ plataforma }} a tamaño completo"
-                            >
-                                <img
-                                    src="{{ url_for('static', filename='img/plataformas_pozos/' ~ historial_produccion) }}"
-                                    alt="Historial de producción de la plataforma {{ plataforma }}"
-                                    loading="lazy"
-                                    decoding="async"
-                                >
-                            </a>
-                        </details>
-                    {% endif %}
                 </div>
             {% endfor %}
         </section>

@@ -193,3 +193,40 @@ class Contenido(db.Model):
         default=True,
         nullable=False
     )
+
+
+
+class ProduccionPozoMensual(db.Model):
+    __tablename__ = "produccion_pozo_mensual"
+    __table_args__ = (
+        db.UniqueConstraint(
+            "campo",
+            "plataforma",
+            "pozo",
+            "fecha",
+            name="uq_produccion_pozo_fecha",
+        ),
+        db.Index(
+            "ix_produccion_fecha_campo",
+            "fecha",
+            "campo",
+            "plataforma",
+            "pozo",
+        ),
+        db.Index("ix_produccion_pozo_fecha", "pozo", "fecha"),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    campo = db.Column(db.String(20), nullable=False)
+    plataforma = db.Column(db.String(50), nullable=False)
+    pozo = db.Column(db.String(80), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    gas_mmpcd = db.Column(db.Float, nullable=False, default=0)
+    agua_mbd = db.Column(db.Float, nullable=False, default=0)
+    aceite_mbd = db.Column(db.Float, nullable=False, default=0)
+    gor_pc_bbl = db.Column(db.Float, nullable=False, default=0)
+    fecha_carga = db.Column(
+        db.DateTime,
+        nullable=False,
+        server_default=db.func.current_timestamp(),
+    )

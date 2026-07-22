@@ -88,6 +88,10 @@ body {
     padding-top:66px;
 }
 
+.pagina-produccion-body .contenido-principal {
+    width: min(1420px, calc(100% - 32px));
+}
+
 #contenido-principal {
     scroll-margin-top: 110px;
 }
@@ -371,7 +375,7 @@ pre {
 
 .indicadores {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 18px;
 
     margin-bottom: 32px;
@@ -396,6 +400,17 @@ pre {
 
 .indicador-texto {
     color: #5f6c7b;
+}
+
+.indicador-enlace {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.indicador-numero-texto {
+    font-size: 1.2rem;
+    line-height: 1.25;
 }
 
 .indicador-numero small {
@@ -597,6 +612,35 @@ pre {
 
 .modal-pozos-contenido {
     grid-template-columns: minmax(0, 1fr);
+}
+
+.modal-pozos-contenido .explorador-pozos {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.modal-pozos-contenido .explorador-pozos-encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 0 0 14px;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--gris-suave);
+}
+
+.modal-pozos-contenido .selector-plataforma {
+    flex-basis: min(360px, 100%);
+}
+
+.explorador-plataformas-dinamico {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+.explorador-plataformas-dinamico .explorador-pozos {
+    margin-top: 8px;
+    padding-top: 20px;
 }
 
 .detalle-pozos {
@@ -870,6 +914,36 @@ pre {
 
 .contenido-documental h1 {
     margin: 14px 0 12px;
+}
+
+.pagina-produccion-historica {
+    width: min(1380px, 100%);
+    margin-inline: auto;
+    padding: 22px;
+    background: var(--blanco);
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 7%);
+}
+
+.pagina-produccion-historica .produccion-interactiva {
+    margin-top: 18px;
+}
+
+.encabezado-produccion-historica {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.encabezado-produccion-historica h1 {
+    margin: 10px 0 0;
+    font-size: 1.65rem;
+}
+
+.volver-produccion {
+    flex: 0 0 auto;
+    margin: 0;
 }
 
 .resumen-contenido {
@@ -1293,6 +1367,11 @@ pre {
     height: auto;
 }
 
+.resultado-plataforma-explorador .explorador-pozos {
+    margin-top: 18px;
+    padding-top: 18px;
+}
+
 .sin-resultados {
     margin-top: 30px;
     padding: 24px;
@@ -1563,4 +1642,239 @@ input:focus {
     border-color: var(--rojo-principal);
 
     box-shadow: 0 0 0 3px rgb(167 25 31 / 14%);
+}
+
+
+.produccion-interactiva {
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 28px;
+    padding: 20px;
+    background: #f7f7f7;
+    border: 1px solid var(--gris-suave);
+    border-radius: 10px;
+}
+
+.produccion-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.produccion-encabezado h4 {
+    margin: 0;
+}
+
+.estado-produccion {
+    color: var(--gris-medio);
+}
+
+.formulario-produccion {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px 14px;
+    align-items: end;
+}
+
+.control-produccion {
+    min-width: 0;
+}
+
+.control-produccion-inactivo {
+    opacity: 0.52;
+}
+
+.control-produccion-inactivo select,
+.control-produccion-inactivo input {
+    cursor: not-allowed;
+    background: #eceff2;
+}
+
+.control-produccion-amplio {
+    grid-column: span 2;
+}
+
+.control-produccion label,
+.barra-grafica-produccion label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--gris-oscuro);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.control-produccion select,
+.control-produccion input,
+.barra-grafica-produccion select {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 11px;
+    color: var(--gris-oscuro);
+    font: inherit;
+    background: var(--blanco);
+    border: 1px solid #c7ced6;
+    border-radius: 6px;
+}
+
+.control-produccion select[multiple] {
+    min-height: 98px;
+}
+
+.estado-produccion {
+    margin: 14px 0;
+    padding: 10px 12px;
+    background: var(--blanco);
+    border-radius: 6px;
+}
+
+.panel-produccion-grafica {
+    position: relative;
+    margin-top: 14px;
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 8px;
+}
+
+.barra-grafica-produccion {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px;
+    border-bottom: 1px solid var(--gris-suave);
+}
+
+.barra-grafica-produccion label {
+    margin: 0;
+}
+
+.barra-grafica-produccion select {
+    width: min(220px, 100%);
+}
+
+.leyenda-produccion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+    padding: 10px 14px;
+    color: var(--gris-oscuro);
+    font-size: 0.86rem;
+    background: #fbfbfb;
+    border-bottom: 1px solid var(--gris-suave);
+}
+
+.leyenda-produccion[hidden] {
+    display: none;
+}
+
+.elemento-leyenda-produccion {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    font-weight: 700;
+}
+
+.muestra-leyenda-produccion {
+    display: inline-block;
+    width: 28px;
+    height: 4px;
+    border-radius: 999px;
+}
+
+.panel-produccion-grafica canvas {
+    display: block;
+    width: 100%;
+    min-height: 460px;
+}
+
+.tooltip-produccion {
+    position: absolute;
+    z-index: 4;
+    max-width: min(280px, calc(100% - 32px));
+    padding: 8px 10px;
+    color: var(--blanco);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.35;
+    pointer-events: none;
+    background: rgb(33 33 33 / 92%);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 18%);
+    transform: none;
+}
+
+.tooltip-produccion[hidden] {
+    display: none;
+}
+
+.tabla-produccion-contenedor {
+    margin-top: 16px;
+    overflow: auto;
+    background: var(--blanco);
+    border: 1px solid var(--gris-suave);
+    border-radius: 8px;
+}
+
+.tabla-produccion {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.tabla-produccion th,
+.tabla-produccion td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.tabla-produccion th:first-child,
+.tabla-produccion td:first-child,
+.tabla-produccion th:nth-child(2),
+.tabla-produccion td:nth-child(2),
+.tabla-produccion th:nth-child(3),
+.tabla-produccion td:nth-child(3),
+.tabla-produccion th:nth-child(4),
+.tabla-produccion td:nth-child(4) {
+    text-align: left;
+}
+
+.tabla-produccion th {
+    position: sticky;
+    top: 0;
+    color: var(--blanco);
+    background: var(--gris-oscuro);
+}
+
+.tabla-produccion th.tabla-produccion-variable-aceite {
+    background: #0052cc;
+}
+
+.tabla-produccion th.tabla-produccion-variable-agua {
+    background: #00875a;
+}
+
+.tabla-produccion th.tabla-produccion-variable-gas {
+    background: #a7191f;
+}
+
+.tabla-produccion th.tabla-produccion-variable-goc {
+    background: #7a4f01;
+}
+
+@media (max-width: 760px) {
+    .formulario-produccion {
+        grid-template-columns: 1fr;
+    }
+
+    .control-produccion-amplio {
+        grid-column: auto;
+    }
+
 }
