@@ -1799,16 +1799,16 @@ input:focus {
     background: var(--blanco);
 }
 
+.pie-grafica-produccion[hidden] {
+    display: none;
+}
+
 .pie-grafica-produccion span {
-    display: inline-block;
-    padding: 4px 18px;
     color: var(--negro);
     font-family: Georgia, "Times New Roman", serif;
     font-size: 1rem;
     font-style: italic;
     line-height: 1.2;
-    background: var(--blanco);
-    border: 1px solid var(--gris-suave);
 }
 
 .tooltip-produccion {

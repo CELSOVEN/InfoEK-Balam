@@ -903,11 +903,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    const actualizarPieGraficaProduccion = (elemento, intervalo) => {
+    const actualizarPieGraficaProduccion = (elemento, intervalo, visible = true) => {
         if (!elemento) return;
 
-        elemento.textContent = textosPeriodoGraficaProduccion[intervalo]
+        const etiqueta = elemento.querySelector("span") || elemento;
+        etiqueta.textContent = textosPeriodoGraficaProduccion[intervalo]
             || "Datos mostrados de acuerdo con el intervalo seleccionado";
+        elemento.hidden = !visible;
+    };
+
+    const ocultarPieGraficaProduccion = (elemento) => {
+        if (elemento) elemento.hidden = true;
     };
 
     const limpiarResultadosProduccion = (tabla, canvas, leyenda, mensaje = "Selecciona filtros para consultar.") => {
@@ -995,6 +1001,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let temporizadorConsulta = null;
 
         const consultarProduccion = async () => {
+            ocultarPieGraficaProduccion(pieGrafica);
             const errorSeleccion = validarSeleccionProduccion(formulario);
             if (errorSeleccion) {
                 estado.textContent = errorSeleccion;
@@ -1022,7 +1029,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (formulario.fecha_inicio.value) parametros.set("fecha_inicio", formulario.fecha_inicio.value);
             if (formulario.fecha_fin.value) parametros.set("fecha_fin", formulario.fecha_fin.value);
-            actualizarPieGraficaProduccion(pieGrafica, formulario.intervalo.value);
 
             estado.textContent = "Consultando producción...";
             const respuesta = await fetch(`/api/produccion?${parametros.toString()}`);
@@ -1034,6 +1040,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             filasActuales = datos.filas;
+            actualizarPieGraficaProduccion(pieGrafica, formulario.intervalo.value, filasActuales.length > 0);
             const notas = datos.notas?.length ? ` ${datos.notas.join(" ")}` : "";
             estado.textContent = `${filasActuales.length} filas encontradas.${notas}`;
             renderizarTablaProduccion(tabla, filasActuales, variablesActuales);
@@ -1057,9 +1064,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         formulario.querySelectorAll('[name="intervalo"], [name="fecha_inicio"], [name="fecha_fin"]').forEach((control) => {
             control.addEventListener("change", () => {
-                if (control.name === "intervalo") {
-                    actualizarPieGraficaProduccion(pieGrafica, control.value);
-                }
+                ocultarPieGraficaProduccion(pieGrafica);
                 programarConsultaProduccion();
             });
         });
@@ -1078,6 +1083,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (formulario.nivel.value === "pozo") {
                     const pozos = obtenerValoresSeleccionados(formulario, "pozo");
                     if (!pozos.length) {
+                        ocultarPieGraficaProduccion(pieGrafica);
                         limpiarResultadosProduccion(tabla, canvas, leyenda, "Selecciona un pozo para consultar.");
                         estado.textContent = "Selecciona un pozo para consultar.";
                         return;
@@ -1118,7 +1124,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tooltip) tooltip.hidden = true;
         });
 
-        actualizarPieGraficaProduccion(pieGrafica, formulario.intervalo.value);
         actualizarFiltrosProduccion(formulario);
         consultarProduccion();
     });
