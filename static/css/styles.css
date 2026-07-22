@@ -1966,6 +1966,28 @@ input:focus {
         min-height: 340px;
     }
 
+    .tabla-produccion-contenedor {
+        margin-top: 12px;
+        border-radius: 6px;
+    }
+
+    .tabla-produccion {
+        min-width: 520px;
+        font-size: 0.68rem;
+    }
+
+    .tabla-produccion th,
+    .tabla-produccion td {
+        padding: 6px 7px;
+        line-height: 1.22;
+        white-space: nowrap;
+    }
+
+    .tabla-produccion th {
+        font-size: 0.62rem;
+        letter-spacing: 0;
+    }
+
     .control-produccion-amplio {
         grid-column: auto;
     }

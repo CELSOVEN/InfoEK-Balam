@@ -820,7 +820,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        if (variable === "todas") {
+        if (variable === "todas" && !esMovil) {
             const variablesIzquierda = variablesEjeProduccion(lineas, "izquierdo");
             const variablesDerecha = variablesEjeProduccion(lineas, "derecho");
 
