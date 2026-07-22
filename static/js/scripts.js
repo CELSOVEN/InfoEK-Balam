@@ -1035,21 +1035,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const thead = tabla.querySelector("thead");
         const tbody = tabla.querySelector("tbody");
         const esMovil = esVistaMovilProduccion();
+        const filasPorBloque = 15;
         const dimensiones = ["periodo", "campo", "plataforma", "pozo"]
             .filter((columna) => filas.some((fila) => fila[columna] !== undefined));
         const dimensionesVisibles = esMovil
             ? dimensiones.filter((columna) => columna === "periodo")
             : dimensiones;
         const columnas = [...dimensionesVisibles, ...variables];
-
-        thead.innerHTML = `<tr>${columnas.map((columna) => {
+        const renderizarEncabezado = (claseFila = "") => `<tr${claseFila}>${columnas.map((columna) => {
             const claseVariable = coloresVariablesProduccion[columna]
                 ? ` class="tabla-produccion-variable tabla-produccion-variable-${columna}"`
                 : "";
             return `<th${claseVariable}>${etiquetasVariablesProduccion[columna] || columna.toUpperCase()}</th>`;
         }).join("")}</tr>`;
-
-        tbody.innerHTML = filas.map((fila) => `<tr>${columnas.map((columna) => {
+        const renderizarFila = (fila) => `<tr>${columnas.map((columna) => {
             const valor = fila[columna] ?? "";
             const valorMostrado = typeof valor === "number" && variablesGraficaProduccion[columna]
                 ? variablesGraficaProduccion[columna].convertir(valor)
@@ -1058,7 +1057,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? formatearPeriodoProduccion(valor)
                 : typeof valorMostrado === "number" ? formatoNumero.format(valorMostrado) : valorMostrado;
             return `<td>${texto}</td>`;
-        }).join("")}</tr>`).join("");
+        }).join("")}</tr>`;
+
+        thead.innerHTML = renderizarEncabezado();
+        tbody.innerHTML = filas.map((fila, indice) => {
+            const repetirEncabezado = filas.length > filasPorBloque
+                && indice > 0
+                && indice % filasPorBloque === 0;
+            const encabezado = repetirEncabezado
+                ? renderizarEncabezado(' class="tabla-produccion-encabezado-repetido"')
+                : "";
+
+            return `${encabezado}${renderizarFila(fila)}`;
+        }).join("");
     };
 
     document.querySelectorAll("[data-produccion-interactiva]").forEach((panel) => {

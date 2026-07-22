@@ -1934,6 +1934,10 @@ input:focus {
     background: #c2188f;
 }
 
+.tabla-produccion-encabezado-repetido th {
+    border-top: 14px solid var(--blanco);
+}
+
 @media (max-width: 760px) {
     .formulario-produccion {
         grid-template-columns: 1fr;
