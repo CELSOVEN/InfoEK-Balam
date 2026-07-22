@@ -1968,24 +1968,40 @@ input:focus {
 
     .tabla-produccion-contenedor {
         margin-top: 12px;
+        overflow: hidden;
         border-radius: 6px;
     }
 
     .tabla-produccion {
-        min-width: 520px;
-        font-size: 0.68rem;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: 0.66rem;
     }
 
     .tabla-produccion th,
     .tabla-produccion td {
-        padding: 6px 7px;
+        padding: 6px 4px;
         line-height: 1.22;
+        text-align: center;
         white-space: nowrap;
     }
 
     .tabla-produccion th {
-        font-size: 0.62rem;
+        font-size: 0.56rem;
         letter-spacing: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .tabla-produccion th:first-child,
+    .tabla-produccion td:first-child,
+    .tabla-produccion th:nth-child(2),
+    .tabla-produccion td:nth-child(2),
+    .tabla-produccion th:nth-child(3),
+    .tabla-produccion td:nth-child(3),
+    .tabla-produccion th:nth-child(4),
+    .tabla-produccion td:nth-child(4) {
+        text-align: center;
     }
 
     .control-produccion-amplio {

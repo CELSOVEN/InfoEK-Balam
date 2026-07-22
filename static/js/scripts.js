@@ -1029,9 +1029,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const renderizarTablaProduccion = (tabla, filas, variables) => {
         const thead = tabla.querySelector("thead");
         const tbody = tabla.querySelector("tbody");
+        const esMovil = esVistaMovilProduccion();
         const dimensiones = ["periodo", "campo", "plataforma", "pozo"]
             .filter((columna) => filas.some((fila) => fila[columna] !== undefined));
-        const columnas = [...dimensiones, ...variables];
+        const dimensionesVisibles = esMovil
+            ? dimensiones.filter((columna) => columna === "periodo")
+            : dimensiones;
+        const columnas = [...dimensionesVisibles, ...variables];
 
         thead.innerHTML = `<tr>${columnas.map((columna) => {
             const claseVariable = coloresVariablesProduccion[columna]
