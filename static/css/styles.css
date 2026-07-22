@@ -1793,8 +1793,7 @@ input:focus {
 .control-grafica-produccion select {
     width: min(100%, 300px);
     min-width: 260px;
-    padding-right: 34px;
-    padding: 10px 11px;
+    padding: 10px 34px 10px 11px;
     color: var(--gris-oscuro);
     font: inherit;
     background: var(--blanco);
@@ -1961,6 +1960,10 @@ input:focus {
         width: min(100%, 360px);
         min-width: 0;
         max-width: 100%;
+    }
+
+    .panel-produccion-grafica canvas {
+        min-height: 340px;
     }
 
     .control-produccion-amplio {

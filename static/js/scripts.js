@@ -173,6 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
         total: "Datos mostrados como acumulado total",
     };
 
+    const esVistaMovilProduccion = () => window.matchMedia("(max-width: 760px)").matches;
+
     const serieProduccion = (fila) => [fila.campo, fila.plataforma, fila.pozo]
         .filter(Boolean)
         .join(" / ") || "TOTAL";
@@ -673,8 +675,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const contexto = canvas.getContext("2d");
         const rect = canvas.getBoundingClientRect();
         const escala = window.devicePixelRatio || 1;
-        const altoGrafica = 460;
-        canvas.width = Math.max(720, rect.width) * escala;
+        const esMovil = esVistaMovilProduccion();
+        const anchoGrafica = esMovil
+            ? Math.max(280, rect.width || canvas.clientWidth || 320)
+            : Math.max(720, rect.width);
+        const altoGrafica = esMovil ? 340 : 460;
+        canvas.width = anchoGrafica * escala;
         canvas.height = altoGrafica * escala;
         contexto.scale(escala, escala);
 
@@ -701,10 +707,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const hayEjeDerecho = lineas.some((linea) => linea.eje === "derecho");
         const hayEjeIzquierdo = lineas.some((linea) => linea.eje === "izquierdo");
         const margen = {
-            superior: variable === "todas" ? 50 : 34,
-            derecha: hayEjeDerecho ? 84 : 24,
-            inferior: 54,
-            izquierda: 76,
+            superior: esMovil ? (variable === "todas" ? 38 : 20) : (variable === "todas" ? 50 : 34),
+            derecha: esMovil ? (hayEjeDerecho ? 48 : 14) : (hayEjeDerecho ? 84 : 24),
+            inferior: esMovil ? 42 : 54,
+            izquierda: esMovil ? (hayEjeIzquierdo ? 48 : 22) : 76,
         };
         const anchoPlot = ancho - margen.izquierda - margen.derecha;
         const altoPlot = alto - margen.superior - margen.inferior;
@@ -731,6 +737,10 @@ document.addEventListener("DOMContentLoaded", () => {
             derecha: margen.izquierda + anchoPlot,
             inferior: margen.superior + altoPlot,
         };
+        const mostrarEtiquetasNodos = !esMovil;
+        const mostrarEtiquetasSerie = !esMovil || lineas.length === 1;
+        const radioPunto = esMovil ? 2.6 : 3;
+        const grosorLinea = esMovil ? 2.4 : 2;
         const yParaValor = (valor, eje) => {
             const escalaActual = eje === "derecho" ? escalaDerecha : escalaIzquierda;
             return margen.superior + altoPlot - (valor / escalaActual.maximo) * altoPlot;
@@ -840,23 +850,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 const y = margen.superior + altoPlot - altoBarra;
                 contexto.fillStyle = linea.color;
                 contexto.fillRect(x, y, barraAncho, altoBarra);
-                dibujarEtiquetaNodo(
-                    contexto,
-                    etiquetasValor,
-                    etiquetaNodoProduccion(punto),
-                    x + barraAncho / 2,
-                    y,
-                    limitesEtiquetas,
-                );
-                dibujarEtiquetaSerie(
-                    contexto,
-                    etiquetasValor,
-                    linea.etiquetaGrafica,
-                    x + barraAncho / 2,
-                    y + Math.max(12, altoBarra / 2),
-                    linea.color,
-                    limitesEtiquetas,
-                );
+                if (mostrarEtiquetasNodos) {
+                    dibujarEtiquetaNodo(
+                        contexto,
+                        etiquetasValor,
+                        etiquetaNodoProduccion(punto),
+                        x + barraAncho / 2,
+                        y,
+                        limitesEtiquetas,
+                    );
+                }
+                if (mostrarEtiquetasSerie) {
+                    dibujarEtiquetaSerie(
+                        contexto,
+                        etiquetasValor,
+                        linea.etiquetaGrafica,
+                        x + barraAncho / 2,
+                        y + Math.max(12, altoBarra / 2),
+                        linea.color,
+                        limitesEtiquetas,
+                    );
+                }
                 canvas.__produccionInteractivos.push({
                     tipo: "punto",
                     x: x + barraAncho / 2,
@@ -870,7 +884,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 registrarInteraccionLinea(linea, puntosDibujo);
                 contexto.strokeStyle = linea.color;
                 contexto.fillStyle = linea.color;
-                contexto.lineWidth = 2;
+                contexto.lineWidth = grosorLinea;
                 contexto.beginPath();
                 puntosDibujo.forEach((punto, indice) => {
                     if (indice === 0) contexto.moveTo(punto.x, punto.y);
@@ -878,7 +892,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 contexto.stroke();
 
-                if (puntosDibujo.length) {
+                if (mostrarEtiquetasSerie && puntosDibujo.length) {
                     const ultimoPunto = puntosDibujo[puntosDibujo.length - 1];
                     dibujarEtiquetaSerie(
                         contexto,
@@ -893,29 +907,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 puntosDibujo.forEach((punto) => {
                     contexto.beginPath();
-                    contexto.arc(punto.x, punto.y, 3, 0, Math.PI * 2);
+                    contexto.arc(punto.x, punto.y, radioPunto, 0, Math.PI * 2);
                     contexto.fill();
-                    dibujarEtiquetaNodo(
-                        contexto,
-                        etiquetasValor,
-                        etiquetaNodoProduccion(punto),
-                        punto.x,
-                        punto.y,
-                        limitesEtiquetas,
-                    );
+                    if (mostrarEtiquetasNodos) {
+                        dibujarEtiquetaNodo(
+                            contexto,
+                            etiquetasValor,
+                            etiquetaNodoProduccion(punto),
+                            punto.x,
+                            punto.y,
+                            limitesEtiquetas,
+                        );
+                    }
                 });
             });
         }
 
         contexto.fillStyle = "#292929";
-        contexto.font = "11px Arial";
+        contexto.font = esMovil ? "10px Arial" : "11px Arial";
         contexto.textAlign = "center";
         const aniosPeriodo = periodos.map((periodo) => String(periodo).slice(0, 4));
         const esSerieAnual = periodos.every((periodo) => /^\d{4}-\d{2}$/.test(String(periodo)))
             && new Set(aniosPeriodo).size === periodos.length;
-        const salto = esSerieAnual || periodos.length <= 14
-            ? 1
-            : Math.max(1, Math.ceil(periodos.length / 10));
+        const salto = esMovil
+            ? (periodos.length <= 5 ? 1 : Math.max(1, Math.ceil(periodos.length / 4)))
+            : (esSerieAnual || periodos.length <= 14
+                ? 1
+                : Math.max(1, Math.ceil(periodos.length / 10)));
         periodos.forEach((periodo, indice) => {
             if (indice % salto !== 0 && indice !== periodos.length - 1) return;
             const x = margen.izquierda + (indice / Math.max(periodos.length - 1, 1)) * anchoPlot;
@@ -969,8 +987,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const contexto = canvas.getContext("2d");
         const rect = canvas.getBoundingClientRect();
         const escala = window.devicePixelRatio || 1;
-        const altoGrafica = 460;
-        canvas.width = Math.max(720, rect.width) * escala;
+        const esMovil = esVistaMovilProduccion();
+        const anchoGrafica = esMovil
+            ? Math.max(280, rect.width || canvas.clientWidth || 320)
+            : Math.max(720, rect.width);
+        const altoGrafica = esMovil ? 340 : 460;
+        canvas.width = anchoGrafica * escala;
         canvas.height = altoGrafica * escala;
         contexto.scale(escala, escala);
         contexto.clearRect(0, 0, canvas.width / escala, canvas.height / escala);
