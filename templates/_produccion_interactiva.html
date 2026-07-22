@@ -87,23 +87,25 @@
 
         </form>
 
-        <div class="estado-produccion" data-estado-produccion>
-            Selecciona filtros para ver la producci&oacute;n.
+        <div class="franja-resultados-produccion">
+            <div class="estado-produccion" data-estado-produccion>
+                Selecciona filtros para ver la producci&oacute;n.
+            </div>
+            <div class="control-grafica-produccion">
+                <label for="{{ prefijo }}-variable-grafica">Gr&aacute;fica</label>
+                <select id="{{ prefijo }}-variable-grafica" data-variable-grafica>
+                    <option value="todas">Todas las variables (2 ejes)</option>
+                    <option value="aceite">ACEITE (bpd)</option>
+                    <option value="agua">AGUA (bpd)</option>
+                    <option value="gas">GAS (MPCD)</option>
+                    <option value="goc">GOR (pcd/bd)</option>
+                </select>
+            </div>
         </div>
 
         <div class="panel-produccion-grafica">
             <div class="barra-grafica-produccion">
                 <div class="resumen-seleccion-produccion" data-resumen-seleccion-produccion></div>
-                <div class="control-grafica-produccion">
-                    <label for="{{ prefijo }}-variable-grafica">Gr&aacute;fica</label>
-                    <select id="{{ prefijo }}-variable-grafica" data-variable-grafica>
-                        <option value="todas">Todas las variables (2 ejes)</option>
-                        <option value="aceite">ACEITE (bpd)</option>
-                        <option value="agua">AGUA (bpd)</option>
-                        <option value="gas">GAS (MPCD)</option>
-                        <option value="goc">GOR (pcd/bd)</option>
-                    </select>
-                </div>
             </div>
             <div class="leyenda-produccion" data-leyenda-produccion></div>
             <canvas data-grafica-produccion height="460"></canvas>

@@ -1723,15 +1723,26 @@ input:focus {
 }
 
 .estado-produccion {
-    margin: 14px 0;
-    padding: 10px 12px;
+    min-width: 0;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    line-height: 1.35;
     background: var(--blanco);
     border-radius: 6px;
 }
 
+.franja-resultados-produccion {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 380px);
+    gap: 10px;
+    align-items: stretch;
+    margin: 10px 0 8px;
+}
+
 .panel-produccion-grafica {
     position: relative;
-    margin-top: 14px;
+    margin-top: 8px;
     overflow: hidden;
     background: var(--blanco);
     border: 1px solid var(--gris-suave);
@@ -1740,10 +1751,9 @@ input:focus {
 
 .barra-grafica-produccion {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
-    gap: 18px;
-    padding: 12px 28px 12px 14px;
+    padding: 12px 14px;
     border-bottom: 1px solid var(--gris-suave);
 }
 
@@ -1759,18 +1769,32 @@ input:focus {
 .control-grafica-produccion {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 10px;
+    min-width: 0;
+    padding: 8px 10px;
+    background: var(--blanco);
+    border-radius: 6px;
 }
 
-.barra-grafica-produccion label {
+.control-grafica-produccion label {
     flex: 0 0 auto;
     margin: 0;
+    color: var(--gris-oscuro);
+    font-size: 0.82rem;
+    font-weight: 700;
 }
 
-.barra-grafica-produccion select {
-    width: 300px;
-    max-width: 42vw;
+.control-grafica-produccion select {
+    width: min(100%, 300px);
+    min-width: 260px;
     padding-right: 34px;
+    padding: 10px 11px;
+    color: var(--gris-oscuro);
+    font: inherit;
+    background: var(--blanco);
+    border: 1px solid #c7ced6;
+    border-radius: 6px;
 }
 
 .leyenda-produccion {
@@ -1911,9 +1935,12 @@ input:focus {
         grid-template-columns: 1fr;
     }
 
+    .franja-resultados-produccion {
+        grid-template-columns: 1fr;
+    }
+
     .barra-grafica-produccion {
         grid-template-columns: 1fr;
-        padding-right: 14px;
     }
 
     .resumen-seleccion-produccion {
@@ -1925,8 +1952,9 @@ input:focus {
         flex-wrap: wrap;
     }
 
-    .barra-grafica-produccion select {
+    .control-grafica-produccion select {
         width: min(100%, 360px);
+        min-width: 0;
         max-width: 100%;
     }
 
