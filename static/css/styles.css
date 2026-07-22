@@ -1585,6 +1585,11 @@ pre {
         max-height: calc(100dvh - 110px);
         padding: 12px;
     }
+    .modal-pozos-contenido .explorador-pozos-encabezado {
+        position: static;
+        top: auto;
+        z-index: auto;
+    }
     .imagen-tabla-plataformas { width: min(100%, 520px); margin: 0 auto; }
     .rejilla-contenidos,
     .distribucion-portal { grid-template-columns: 1fr; }
