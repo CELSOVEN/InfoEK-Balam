@@ -1673,7 +1673,7 @@ input:focus {
 
 .formulario-produccion {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px 14px;
     align-items: end;
 }
@@ -1739,20 +1739,38 @@ input:focus {
 }
 
 .barra-grafica-produccion {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 12px;
+    gap: 18px;
+    padding: 12px 28px 12px 14px;
     border-bottom: 1px solid var(--gris-suave);
 }
 
+.resumen-seleccion-produccion {
+    min-width: 0;
+    padding-left: 14px;
+    color: var(--negro);
+    font-size: 1rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.control-grafica-produccion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .barra-grafica-produccion label {
+    flex: 0 0 auto;
     margin: 0;
 }
 
 .barra-grafica-produccion select {
-    width: min(220px, 100%);
+    width: 300px;
+    max-width: 42vw;
+    padding-right: 34px;
 }
 
 .leyenda-produccion {
@@ -1891,6 +1909,25 @@ input:focus {
 @media (max-width: 760px) {
     .formulario-produccion {
         grid-template-columns: 1fr;
+    }
+
+    .barra-grafica-produccion {
+        grid-template-columns: 1fr;
+        padding-right: 14px;
+    }
+
+    .resumen-seleccion-produccion {
+        padding-left: 0;
+    }
+
+    .control-grafica-produccion {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .barra-grafica-produccion select {
+        width: min(100%, 360px);
+        max-width: 100%;
     }
 
     .control-produccion-amplio {

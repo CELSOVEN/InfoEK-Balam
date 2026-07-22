@@ -7,29 +7,12 @@
     >
         <div class="produccion-encabezado">
             <div>
-                <h4>Consulta histórica de producción</h4>
+                <h4>Consulta hist&oacute;rica de producci&oacute;n</h4>
             </div>
         </div>
 
         <form class="formulario-produccion" data-formulario-produccion>
-            <div class="control-produccion">
-                <label for="{{ prefijo }}-nivel">Agrupar por</label>
-                <select id="{{ prefijo }}-nivel" name="nivel">
-                    <option value="campo">Campo</option>
-                    <option value="plataforma">Plataforma</option>
-                    <option value="pozo">Pozo</option>
-                </select>
-            </div>
-
-            <div class="control-produccion">
-                <label for="{{ prefijo }}-intervalo">Intervalo</label>
-                <select id="{{ prefijo }}-intervalo" name="intervalo">
-                    <option value="semestre">Semestral</option>
-                    <option value="trimestre">Trimestral</option>
-                    <option value="anio">Año</option>
-                    <option value="total">Total</option>
-                </select>
-            </div>
+            <input id="{{ prefijo }}-nivel" name="nivel" type="hidden" value="campo">
 
             <div class="control-produccion">
                 <label for="{{ prefijo }}-campo">Campo</label>
@@ -73,6 +56,16 @@
             </div>
 
             <div class="control-produccion">
+                <label for="{{ prefijo }}-intervalo">Intervalo</label>
+                <select id="{{ prefijo }}-intervalo" name="intervalo">
+                    <option value="semestre">Semestral</option>
+                    <option value="trimestre">Trimestral</option>
+                    <option value="anio">A&ntilde;o</option>
+                    <option value="total">Total</option>
+                </select>
+            </div>
+
+            <div class="control-produccion">
                 <label for="{{ prefijo }}-fecha-inicio">Desde</label>
                 <input
                     id="{{ prefijo }}-fecha-inicio"
@@ -95,19 +88,22 @@
         </form>
 
         <div class="estado-produccion" data-estado-produccion>
-            Selecciona filtros para ver la producción.
+            Selecciona filtros para ver la producci&oacute;n.
         </div>
 
         <div class="panel-produccion-grafica">
             <div class="barra-grafica-produccion">
-                <label for="{{ prefijo }}-variable-grafica">Gráfica</label>
-                <select id="{{ prefijo }}-variable-grafica" data-variable-grafica>
-                    <option value="todas">Todas las variables (2 ejes)</option>
-                    <option value="aceite">ACEITE (bpd)</option>
-                    <option value="agua">AGUA (bpd)</option>
-                    <option value="gas">GAS (MPCD)</option>
-                    <option value="goc">GOR (pcd/bd)</option>
-                </select>
+                <div class="resumen-seleccion-produccion" data-resumen-seleccion-produccion></div>
+                <div class="control-grafica-produccion">
+                    <label for="{{ prefijo }}-variable-grafica">Gr&aacute;fica</label>
+                    <select id="{{ prefijo }}-variable-grafica" data-variable-grafica>
+                        <option value="todas">Todas las variables (2 ejes)</option>
+                        <option value="aceite">ACEITE (bpd)</option>
+                        <option value="agua">AGUA (bpd)</option>
+                        <option value="gas">GAS (MPCD)</option>
+                        <option value="goc">GOR (pcd/bd)</option>
+                    </select>
+                </div>
             </div>
             <div class="leyenda-produccion" data-leyenda-produccion></div>
             <canvas data-grafica-produccion height="460"></canvas>

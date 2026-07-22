@@ -291,6 +291,12 @@ document.addEventListener("DOMContentLoaded", () => {
         pozo: ["campo", "plataforma", "pozo"],
     };
 
+    const intervaloAutomaticoPorNivel = {
+        campo: "anio",
+        plataforma: "anio",
+        pozo: "trimestre",
+    };
+
     const obtenerValoresSeleccionados = (formulario, nombre) => Array.from(
         formulario.querySelectorAll(`[name="${nombre}"]`)
     ).flatMap((elemento) => {
@@ -307,24 +313,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return elemento.value ? [elemento.value] : [];
     });
 
+    const nivelProduccionPorSeleccion = (formulario) => {
+        if (obtenerValoresSeleccionados(formulario, "pozo").length) return "pozo";
+        if (obtenerValoresSeleccionados(formulario, "plataforma").length) return "plataforma";
+        return "campo";
+    };
+
+    const aplicarNivelProduccion = (formulario, ajustarIntervalo = false) => {
+        const nivel = nivelProduccionPorSeleccion(formulario);
+
+        formulario.nivel.value = nivel;
+        if (ajustarIntervalo && formulario.intervalo) {
+            formulario.intervalo.value = intervaloAutomaticoPorNivel[nivel] || formulario.intervalo.value;
+        }
+
+        return nivel;
+    };
+
     const actualizarFiltrosProduccion = (formulario) => {
-        const filtrosActivos = filtrosProduccionPorNivel[formulario.nivel.value] || [];
+        filtrarPlataformasProduccion(formulario);
+        filtrarPozosProduccion(formulario);
+
+        const campos = obtenerValoresSeleccionados(formulario, "campo");
+        const plataformas = obtenerValoresSeleccionados(formulario, "plataforma");
 
         ["campo", "plataforma", "pozo"].forEach((nombre) => {
             const control = formulario.querySelector(`[name="${nombre}"]`);
             const contenedor = control?.closest(".control-produccion");
-            const activo = filtrosActivos.includes(nombre);
+            let activo = true;
 
             if (!control) return;
+            if (nombre === "plataforma") activo = campos.length > 0;
+            if (nombre === "pozo") activo = plataformas.length > 0;
 
             control.disabled = !activo;
             if (contenedor) {
                 contenedor.classList.toggle("control-produccion-inactivo", !activo);
             }
         });
-
-        filtrarPlataformasProduccion(formulario);
-        filtrarPozosProduccion(formulario);
     };
 
     const filtrarPlataformasProduccion = (formulario) => {
@@ -360,7 +386,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const campos = obtenerValoresSeleccionados(formulario, "campo");
         const plataformas = obtenerValoresSeleccionados(formulario, "plataforma");
-        const requierePlataforma = formulario.nivel.value === "pozo";
         let visibles = 0;
 
         Array.from(selectorPozos.options).forEach((opcion) => {
@@ -373,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const coincideCampo = !campos.length || campos.includes(opcion.dataset.campo);
             const coincidePlataforma = plataformas.length
                 ? plataformas.includes(opcion.dataset.plataforma)
-                : !requierePlataforma;
+                : false;
             const visible = coincideCampo && coincidePlataforma;
 
             opcion.hidden = !visible;
@@ -916,6 +941,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elemento) elemento.hidden = true;
     };
 
+    const actualizarResumenSeleccionProduccion = (elemento, formulario) => {
+        if (!elemento) return;
+
+        const campo = obtenerValoresSeleccionados(formulario, "campo")[0];
+        const plataforma = obtenerValoresSeleccionados(formulario, "plataforma")[0];
+        const pozo = obtenerValoresSeleccionados(formulario, "pozo")[0];
+        const segmentos = [];
+
+        if (campo) segmentos.push(`Campo: ${campo}`);
+        if (plataforma) segmentos.push(`Plataforma: ${plataforma}`);
+        if (pozo) segmentos.push(`Pozo: ${pozo}`);
+
+        elemento.textContent = segmentos.join(" | ");
+    };
+
     const limpiarResultadosProduccion = (tabla, canvas, leyenda, mensaje = "Selecciona filtros para consultar.") => {
         const thead = tabla.querySelector("thead");
         const tbody = tabla.querySelector("tbody");
@@ -996,12 +1036,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const leyenda = panel.querySelector("[data-leyenda-produccion]");
         const tooltip = panel.querySelector("[data-tooltip-produccion]");
         const pieGrafica = panel.querySelector("[data-pie-grafica-produccion]");
+        const resumenSeleccion = panel.querySelector("[data-resumen-seleccion-produccion]");
         let filasActuales = [];
         let variablesActuales = [...ordenVariablesGrafica];
         let temporizadorConsulta = null;
 
         const consultarProduccion = async () => {
             ocultarPieGraficaProduccion(pieGrafica);
+            aplicarNivelProduccion(formulario);
+            actualizarFiltrosProduccion(formulario);
+            actualizarResumenSeleccionProduccion(resumenSeleccion, formulario);
             const errorSeleccion = validarSeleccionProduccion(formulario);
             if (errorSeleccion) {
                 estado.textContent = errorSeleccion;
@@ -1057,11 +1101,6 @@ document.addEventListener("DOMContentLoaded", () => {
             temporizadorConsulta = window.setTimeout(consultarProduccion, 220);
         };
 
-        formulario.nivel.addEventListener("change", () => {
-            actualizarFiltrosProduccion(formulario);
-            programarConsultaProduccion();
-        });
-
         formulario.querySelectorAll('[name="intervalo"], [name="fecha_inicio"], [name="fecha_fin"]').forEach((control) => {
             control.addEventListener("change", () => {
                 ocultarPieGraficaProduccion(pieGrafica);
@@ -1071,30 +1110,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
         formulario.querySelectorAll('[name="campo"]').forEach((control) => {
             control.addEventListener("change", () => {
+                const selectorPlataforma = formulario.querySelector('[name="plataforma"]');
+                const selectorPozo = formulario.querySelector('[name="pozo"]');
+
+                if (selectorPlataforma) selectorPlataforma.value = "";
+                if (selectorPozo) selectorPozo.value = "";
+                aplicarNivelProduccion(formulario, true);
                 filtrarPlataformasProduccion(formulario);
                 filtrarPozosProduccion(formulario);
+                actualizarFiltrosProduccion(formulario);
+                actualizarResumenSeleccionProduccion(resumenSeleccion, formulario);
                 programarConsultaProduccion();
             });
         });
 
         formulario.querySelectorAll('[name="plataforma"]').forEach((control) => {
             control.addEventListener("change", () => {
+                const selectorPozo = formulario.querySelector('[name="pozo"]');
+
+                if (selectorPozo) selectorPozo.value = "";
+                aplicarNivelProduccion(formulario, true);
                 filtrarPozosProduccion(formulario);
-                if (formulario.nivel.value === "pozo") {
-                    const pozos = obtenerValoresSeleccionados(formulario, "pozo");
-                    if (!pozos.length) {
-                        ocultarPieGraficaProduccion(pieGrafica);
-                        limpiarResultadosProduccion(tabla, canvas, leyenda, "Selecciona un pozo para consultar.");
-                        estado.textContent = "Selecciona un pozo para consultar.";
-                        return;
-                    }
-                }
+                actualizarFiltrosProduccion(formulario);
+                actualizarResumenSeleccionProduccion(resumenSeleccion, formulario);
                 programarConsultaProduccion();
             });
         });
 
         formulario.querySelectorAll('[name="pozo"]').forEach((control) => {
-            control.addEventListener("change", programarConsultaProduccion);
+            control.addEventListener("change", () => {
+                aplicarNivelProduccion(formulario, true);
+                actualizarFiltrosProduccion(formulario);
+                actualizarResumenSeleccionProduccion(resumenSeleccion, formulario);
+                programarConsultaProduccion();
+            });
         });
 
         formulario.addEventListener("submit", (evento) => {
@@ -1124,7 +1173,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tooltip) tooltip.hidden = true;
         });
 
+        aplicarNivelProduccion(formulario);
         actualizarFiltrosProduccion(formulario);
+        actualizarResumenSeleccionProduccion(resumenSeleccion, formulario);
         consultarProduccion();
     });
 
