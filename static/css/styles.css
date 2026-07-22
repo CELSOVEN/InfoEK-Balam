@@ -1861,11 +1861,12 @@ input:focus {
 }
 
 .tabla-produccion th.tabla-produccion-variable-gas {
-    background: #a7191f;
+    color: var(--gris-oscuro);
+    background: #f2c200;
 }
 
 .tabla-produccion th.tabla-produccion-variable-goc {
-    background: #7a4f01;
+    background: #c2188f;
 }
 
 @media (max-width: 760px) {

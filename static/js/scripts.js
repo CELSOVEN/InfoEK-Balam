@@ -144,17 +144,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const ordenVariablesGrafica = ["aceite", "agua", "gas", "goc"];
 
     const coloresVariablesProduccion = {
-        gas: "#a7191f",
+        gas: "#f2c200",
         aceite: "#0052cc",
         agua: "#00875a",
-        goc: "#7a4f01",
+        goc: "#c2188f",
+    };
+
+    const coloresTextoVariablesProduccion = {
+        ...coloresVariablesProduccion,
+        gas: "#9a6b00",
     };
 
     const coloresProduccion = [
-        "#a7191f",
         "#0052cc",
         "#00875a",
-        "#7a4f01",
+        "#f2c200",
+        "#c2188f",
         "#5b2c83",
         "#c25100",
         "#17494d",
@@ -587,12 +592,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    const etiquetasEjeProduccion = (lineas, eje) => [...new Set(
-        lineas
-            .filter((linea) => linea.eje === eje)
-            .map((linea) => variablesGraficaProduccion[linea.variable]?.etiqueta)
-            .filter(Boolean)
-    )];
+    const variablesEjeProduccion = (lineas, eje) => ordenVariablesGrafica
+        .filter((variable) => lineas.some((linea) => linea.eje === eje && linea.variable === variable));
+
+    const dibujarTituloEjeProduccion = (contexto, variables, x, y, alineacion, prefijo = "") => {
+        if (!variables.length) return;
+
+        contexto.font = "bold 12px Arial";
+        contexto.textAlign = "left";
+        const segmentos = [];
+
+        if (prefijo) {
+            segmentos.push({
+                texto: prefijo,
+                color: "#515151",
+            });
+        }
+
+        variables.forEach((variable, indice) => {
+            const etiqueta = variablesGraficaProduccion[variable]?.etiqueta;
+            if (!etiqueta) return;
+
+            segmentos.push({
+                texto: `${indice ? ", " : ""}${etiqueta}`,
+                color: coloresTextoVariablesProduccion[variable] || "#515151",
+            });
+        });
+
+        const anchoTotal = segmentos.reduce(
+            (suma, segmento) => suma + contexto.measureText(segmento.texto).width,
+            0,
+        );
+        let xActual = alineacion === "right" ? x - anchoTotal : x;
+
+        segmentos.forEach((segmento) => {
+            contexto.fillStyle = segmento.color;
+            contexto.fillText(segmento.texto, xActual, y);
+            xActual += contexto.measureText(segmento.texto).width;
+        });
+    };
 
     const dibujarGraficaProduccion = (
         canvas,
@@ -736,24 +774,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 altoPlot,
                 escalaDerecha,
                 "derecho",
-                "#8b2529",
+                "#292929",
             );
         }
 
         if (variable === "todas") {
-            const etiquetasIzquierda = etiquetasEjeProduccion(lineas, "izquierdo");
-            const etiquetasDerecha = etiquetasEjeProduccion(lineas, "derecho");
-            contexto.font = "bold 12px Arial";
-            contexto.textAlign = "left";
-            contexto.fillStyle = "#515151";
-            if (etiquetasIzquierda.length) {
-                contexto.fillText(`Producción: ${etiquetasIzquierda.join(", ")}`, margen.izquierda, 20);
-            }
-            if (etiquetasDerecha.length) {
-                contexto.textAlign = "right";
-                contexto.fillStyle = "#8b2529";
-                contexto.fillText(etiquetasDerecha.join(", "), margen.izquierda + anchoPlot, 20);
-            }
+            const variablesIzquierda = variablesEjeProduccion(lineas, "izquierdo");
+            const variablesDerecha = variablesEjeProduccion(lineas, "derecho");
+
+            dibujarTituloEjeProduccion(
+                contexto,
+                variablesIzquierda,
+                margen.izquierda,
+                20,
+                "left",
+                "Producción: ",
+            );
+            dibujarTituloEjeProduccion(
+                contexto,
+                variablesDerecha,
+                margen.izquierda + anchoPlot,
+                20,
+                "right",
+            );
         }
 
         if (periodos.length === 1) {
