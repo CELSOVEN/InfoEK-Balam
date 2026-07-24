@@ -9,6 +9,9 @@
         <h2>Roles y permisos</h2>
         <p>Crea perfiles de acceso y asígnalos a los usuarios.</p>
     </div>
+    <a class="boton-secundario" href="{{ url_for('portal') }}">
+        &larr; Regresar al portal
+    </a>
 </section>
 
 {% with mensajes = get_flashed_messages(with_categories=true) %}

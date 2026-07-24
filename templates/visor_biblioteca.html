@@ -11,14 +11,23 @@
         <p>Documento disponible únicamente para consulta en línea.</p>
         {% endif %}
     </div>
-    {% if puede_descargar %}
-    <a
-        class="boton-secundario"
-        href="{{ url_for('descargar_documento_biblioteca', nombre_archivo=nombre_archivo) }}"
-    >
-        Descargar PDF
-    </a>
-    {% endif %}
+    <div class="acciones-documento">
+        <button
+            type="button"
+            class="boton-secundario"
+            onclick="window.close()"
+        >
+            &larr; Regresar al portal
+        </button>
+        {% if puede_descargar %}
+        <a
+            class="boton-secundario"
+            href="{{ url_for('descargar_documento_biblioteca', nombre_archivo=nombre_archivo) }}"
+        >
+            Descargar PDF
+        </a>
+        {% endif %}
+    </div>
 </section>
 
 <iframe

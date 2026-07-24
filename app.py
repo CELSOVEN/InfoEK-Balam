@@ -437,8 +437,10 @@ def cargar_roles_y_permisos_iniciales():
     if basico is None:
         basico = Rol(nombre="Básico", es_sistema=True)
         db.session.add(basico)
-    basico.descripcion = "Acceso al portal sin biblioteca ni producción."
-    basico.permisos = []
+    basico.descripcion = "Acceso al portal y consulta de la biblioteca."
+    basico.permisos = [
+        permisos["biblioteca.ver"],
+    ]
 
     db.session.flush()
     admin_username = os.environ.get("ADMIN_USERNAME", "admin")
