@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Roles y permisos | InfoEk-Balam{% endblock %}
+
+{% block content %}
+<section class="portal-bienvenida">
+    <div>
+        <p class="etiqueta">ADMINISTRACIÓN</p>
+        <h2>Roles y permisos</h2>
+        <p>Crea perfiles de acceso y asígnalos a los usuarios.</p>
+    </div>
+</section>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in mensajes %}
+        <p class="alerta alerta-{{ categoria }}">{{ mensaje }}</p>
+    {% endfor %}
+{% endwith %}
+
+<section class="panel-administracion">
+    <article>
+        <h3>Crear usuario</h3>
+        <form method="post" class="formulario-administracion">
+            <input type="hidden" name="accion" value="crear_usuario">
+            <input type="hidden" name="token_csrf" value="{{ token_csrf }}">
+            <label>Nombre de la persona
+                <input name="nombre_persona" maxlength="100" required>
+            </label>
+            <label>Nombre de usuario
+                <input
+                    name="username"
+                    minlength="3"
+                    maxlength="50"
+                    pattern="[A-Za-z0-9._-]+"
+                    autocomplete="off"
+                    required
+                >
+            </label>
+            <label>Contrase&ntilde;a inicial
+                <input
+                    type="password"
+                    name="password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+            </label>
+            <label>Confirmar contrase&ntilde;a
+                <input
+                    type="password"
+                    name="confirmar_password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+            </label>
+            <fieldset>
+                <legend>Roles iniciales</legend>
+                {% for rol in roles %}
+                <label>
+                    <input
+                        type="checkbox"
+                        name="roles"
+                        value="{{ rol.id }}"
+                        {% if rol.nombre == 'Básico' %}checked{% endif %}
+                    >
+                    {{ rol.nombre }}
+                </label>
+                {% endfor %}
+            </fieldset>
+            <button type="submit">Crear usuario</button>
+        </form>
+    </article>
+
+    <article>
+        <h3>Crear un rol</h3>
+        <form method="post" class="formulario-administracion">
+            <input type="hidden" name="accion" value="crear_rol">
+            <input type="hidden" name="token_csrf" value="{{ token_csrf }}">
+            <label>Nombre
+                <input name="nombre" maxlength="80" required>
+            </label>
+            <label>Descripción
+                <input name="descripcion" maxlength="255">
+            </label>
+            <fieldset>
+                <legend>Permisos</legend>
+                {% for permiso in permisos %}
+                <label class="opcion-permiso">
+                    <input type="checkbox" name="permisos" value="{{ permiso.codigo }}">
+                    <span><strong>{{ permiso.nombre }}</strong><small>{{ permiso.descripcion }}</small></span>
+                </label>
+                {% endfor %}
+            </fieldset>
+            <button type="submit">Crear rol</button>
+        </form>
+    </article>
+
+    <article>
+        <h3>Administrar cuentas</h3>
+        {% for usuario in usuarios %}
+        <form method="post" class="asignacion-usuario">
+            <input type="hidden" name="accion" value="actualizar_usuario">
+            <input type="hidden" name="token_csrf" value="{{ token_csrf }}">
+            <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+            <div>
+                <strong>{{ usuario.nombre }}</strong>
+                <small>@{{ usuario.username }}</small>
+            </div>
+            <div class="roles-usuario">
+                {% for rol in roles %}
+                <label>
+                    <input
+                        type="checkbox"
+                        name="roles"
+                        value="{{ rol.id }}"
+                        {% if rol in usuario.roles %}checked{% endif %}
+                    >
+                    {{ rol.nombre }}
+                </label>
+                {% endfor %}
+                <label class="cambio-password">
+                    Nueva contrase&ntilde;a
+                    <input
+                        type="password"
+                        name="password_nuevo"
+                        minlength="8"
+                        placeholder="Dejar igual"
+                        autocomplete="new-password"
+                    >
+                </label>
+            </div>
+            <button type="submit">Guardar</button>
+        </form>
+        {% endfor %}
+    </article>
+</section>
+{% endblock %}

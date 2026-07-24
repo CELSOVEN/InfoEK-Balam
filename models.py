@@ -1,7 +1,55 @@
 from flask_login import UserMixin
+from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import db
+
+
+roles_permisos = db.Table(
+    "roles_permisos",
+    db.Column("rol_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
+    db.Column(
+        "permiso_id",
+        db.Integer,
+        db.ForeignKey("permisos.id"),
+        primary_key=True,
+    ),
+)
+
+usuarios_roles = db.Table(
+    "usuarios_roles",
+    db.Column(
+        "usuario_id",
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        primary_key=True,
+    ),
+    db.Column("rol_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
+)
+
+
+class Permiso(db.Model):
+    __tablename__ = "permisos"
+
+    id = db.Column(db.Integer, primary_key=True)
+    codigo = db.Column(db.String(80), unique=True, nullable=False)
+    nombre = db.Column(db.String(120), nullable=False)
+    descripcion = db.Column(db.String(255), nullable=True)
+
+
+class Rol(db.Model):
+    __tablename__ = "roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), unique=True, nullable=False)
+    descripcion = db.Column(db.String(255), nullable=True)
+    es_sistema = db.Column(db.Boolean, default=False, nullable=False)
+    permisos = db.relationship(
+        "Permiso",
+        secondary=roles_permisos,
+        lazy="selectin",
+        backref=db.backref("roles", lazy="selectin"),
+    )
 
 
 class Usuario(UserMixin, db.Model):
@@ -34,6 +82,19 @@ class Usuario(UserMixin, db.Model):
         nullable=False
     )
 
+    roles = db.relationship(
+        "Rol",
+        secondary=usuarios_roles,
+        lazy="selectin",
+        backref=db.backref("usuarios", lazy="selectin"),
+    )
+
+    sesiones_navegacion = db.relationship(
+        "SesionNavegacion",
+        back_populates="usuario",
+        lazy="dynamic",
+    )
+
     def establecer_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -43,9 +104,43 @@ class Usuario(UserMixin, db.Model):
             password
         )
 
+    def tiene_permiso(self, codigo):
+        return any(
+            permiso.codigo == codigo
+            for rol in self.roles
+            for permiso in rol.permisos
+        )
+
     @property
     def is_active(self):
         return self.activo
+
+
+class SesionNavegacion(db.Model):
+    __tablename__ = "sesiones_navegacion"
+    __table_args__ = (
+        db.Index(
+            "ix_sesiones_navegacion_usuario_ingreso",
+            "usuario_id",
+            "fecha_ingreso",
+        ),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        nullable=False,
+    )
+    fecha_ingreso = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    ultima_actividad = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    fecha_salida = db.Column(db.DateTime, nullable=True)
+    usuario = db.relationship("Usuario", back_populates="sesiones_navegacion")
+
+    @property
+    def duracion_segundos(self):
+        fin = self.fecha_salida or self.ultima_actividad
+        return max(0, int((fin - self.fecha_ingreso).total_seconds()))
 
 
 class Pozo(db.Model):

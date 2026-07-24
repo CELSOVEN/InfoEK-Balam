@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ nombre_archivo }} | Biblioteca{% endblock %}
+
+{% block content %}
+<section class="encabezado-visor-biblioteca">
+    <div>
+        <p class="etiqueta">BIBLIOTECA</p>
+        <h2>{{ nombre_archivo }}</h2>
+        {% if not puede_descargar %}
+        <p>Documento disponible únicamente para consulta en línea.</p>
+        {% endif %}
+    </div>
+    {% if puede_descargar %}
+    <a
+        class="boton-secundario"
+        href="{{ url_for('descargar_documento_biblioteca', nombre_archivo=nombre_archivo) }}"
+    >
+        Descargar PDF
+    </a>
+    {% endif %}
+</section>
+
+<iframe
+    class="visor-pdf-biblioteca"
+    src="{{ url_for('archivo_biblioteca_visualizacion', nombre_archivo=nombre_archivo) }}#toolbar=0&navpanes=0"
+    title="Visualizador de {{ nombre_archivo }}"
+></iframe>
+{% endblock %}

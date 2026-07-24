@@ -102,6 +102,14 @@
         <a href="#">
             ES | EN
         </a>
+        {% if current_user.is_authenticated and current_user.tiene_permiso('usuarios.administrar') %}
+        <a href="{{ url_for('administrar_roles') }}">
+            Roles
+        </a>
+        <a href="{{ url_for('actividad_usuarios') }}">
+            Actividad
+        </a>
+        {% endif %}
     </nav>
 
     <nav class="menu-movil" id="menu-movil">
@@ -116,6 +124,14 @@
     <a href="#">
         ES | EN
     </a>
+    {% if current_user.is_authenticated and current_user.tiene_permiso('usuarios.administrar') %}
+    <a href="{{ url_for('administrar_roles') }}">
+        Roles
+    </a>
+    <a href="{{ url_for('actividad_usuarios') }}">
+        Actividad
+    </a>
+    {% endif %}
 </nav>
 
 

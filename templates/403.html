@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Acceso denegado | InfoEk-Balam{% endblock %}
+
+{% block content %}
+<section class="estado-error">
+    <p class="etiqueta">ERROR 403</p>
+    <h2>No tienes permiso para entrar aquí</h2>
+    <p>Solicita a un administrador el rol necesario para acceder a esta sección.</p>
+    <a class="boton-secundario" href="{{ url_for('portal') }}">Volver al portal</a>
+</section>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Actividad de usuarios | InfoEk-Balam{% endblock %}
+
+{% block content %}
+<section class="portal-bienvenida">
+    <div>
+        <p class="etiqueta">ADMINISTRACIÓN</p>
+        <h2>Actividad de usuarios</h2>
+        <p>
+            Ingresos y tiempo de navegación calculado hasta la última
+            actividad registrada o el cierre de sesión.
+        </p>
+    </div>
+</section>
+
+<section class="tabla-actividad-contenedor">
+    <table class="tabla-actividad">
+        <thead>
+            <tr>
+                <th>Persona</th>
+                <th>Usuario</th>
+                <th>Ingreso</th>
+                <th>Última actividad</th>
+                <th>Salida</th>
+                <th>Tiempo navegado</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in sesiones %}
+            <tr>
+                <td>{{ registro.usuario.nombre }}</td>
+                <td>@{{ registro.usuario.username }}</td>
+                <td>{{ registro.fecha_ingreso|fecha_local }}</td>
+                <td>{{ registro.ultima_actividad|fecha_local }}</td>
+                <td>{{ registro.fecha_salida|fecha_local }}</td>
+                <td>{{ registro.duracion_segundos|duracion_legible }}</td>
+                <td>
+                    {% if registro.fecha_salida %}
+                        Cerrada
+                    {% else %}
+                        En curso
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7">Todavía no hay ingresos registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% if paginacion.pages > 1 %}
+<nav class="paginacion" aria-label="Páginas de actividad">
+    {% if paginacion.has_prev %}
+    <a href="{{ url_for('actividad_usuarios', pagina=paginacion.prev_num) }}">Anterior</a>
+    {% endif %}
+    <span>Página {{ paginacion.page }} de {{ paginacion.pages }}</span>
+    {% if paginacion.has_next %}
+    <a href="{{ url_for('actividad_usuarios', pagina=paginacion.next_num) }}">Siguiente</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

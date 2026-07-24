@@ -6,7 +6,7 @@ from database import db
 from contenido_inicial import CONTENIDOS_INICIALES
 from datos_pozos import POZOS_INICIALES
 from datos_produccion import leer_produccion_excel
-from models import Usuario, Contenido, Pozo, ProduccionPozoMensual
+from models import Usuario, Contenido, Pozo, ProduccionPozoMensual, Rol
 
 
 def crear_usuario_administrador():
@@ -40,6 +40,9 @@ def crear_usuario_administrador():
     if usuario:
 
         usuario.establecer_password(admin_password)
+        rol_administrador = Rol.query.filter_by(nombre="Administrador").first()
+        if rol_administrador and rol_administrador not in usuario.roles:
+            usuario.roles.append(rol_administrador)
 
         db.session.commit()
 
@@ -57,6 +60,9 @@ def crear_usuario_administrador():
     usuario.establecer_password(
         admin_password
     )
+    rol_administrador = Rol.query.filter_by(nombre="Administrador").first()
+    if rol_administrador:
+        usuario.roles.append(rol_administrador)
 
     db.session.add(usuario)
     db.session.commit()

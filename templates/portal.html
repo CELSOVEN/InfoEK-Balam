@@ -103,6 +103,7 @@
 </section>
 
 <section class="indicadores">
+    {% if puede_ver_biblioteca %}
     <article
         class="indicador indicador-interactivo"
         role="button"
@@ -119,6 +120,7 @@
             Biblioteca
         </span>
     </article>
+    {% endif %}
 
     <article
         class="indicador indicador-interactivo"
@@ -190,6 +192,7 @@
         </span>
     </article>
 
+    {% if current_user.tiene_permiso('produccion.ver') %}
     <a
         class="indicador indicador-interactivo indicador-enlace indicador-produccion-historica"
         href="{{ url_for('produccion_historica') }}"
@@ -202,8 +205,10 @@
             Consulta por campo, plataforma y pozo.
         </span>
     </a>
+    {% endif %}
 </section>
 
+{% if puede_ver_biblioteca %}
 <dialog
     class="modal-plataformas modal-biblioteca"
     id="modal-biblioteca"
@@ -231,13 +236,24 @@
                 {% for documento in documentos_biblioteca %}
                     <li>
                         <span class="icono-pdf" aria-hidden="true">PDF</span>
-                        <a
-                            href="{{ url_for('ver_documento_biblioteca', nombre_archivo=documento) }}"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            {{ documento }}
-                        </a>
+                        <span class="nombre-documento">{{ documento }}</span>
+                        <span class="acciones-documento">
+                            <a
+                                href="{{ url_for('ver_documento_biblioteca', nombre_archivo=documento) }}"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                Abrir
+                            </a>
+                            {% if puede_descargar_biblioteca %}
+                            <a
+                                href="{{ url_for('descargar_documento_biblioteca', nombre_archivo=documento) }}"
+                                class="enlace-descarga"
+                            >
+                                Descargar
+                            </a>
+                            {% endif %}
+                        </span>
                     </li>
                 {% endfor %}
             </ul>
@@ -246,6 +262,7 @@
         {% endif %}
     </div>
 </dialog>
+{% endif %}
 
 <dialog
     class="modal-plataformas"

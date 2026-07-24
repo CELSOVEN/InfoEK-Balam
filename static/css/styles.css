@@ -531,6 +531,39 @@ pre {
     overflow-wrap: anywhere;
 }
 
+.nombre-documento {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.acciones-documento {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 12px;
+}
+
+.lista-biblioteca .enlace-descarga {
+    color: #9f151a;
+}
+
+.encabezado-visor-biblioteca {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.visor-pdf-biblioteca {
+    width: 100%;
+    height: calc(100dvh - 230px);
+    min-height: 560px;
+    background: #4b4f54;
+    border: 0;
+    border-radius: 10px;
+}
+
 .icono-pdf {
     flex: 0 0 auto;
     padding: 5px 6px;
@@ -1681,6 +1714,127 @@ input:focus {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px 14px;
     align-items: end;
+}
+
+.panel-administracion {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.panel-administracion > article {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.panel-administracion > article:last-child {
+    grid-column: 1 / -1;
+}
+
+.formulario-administracion,
+.asignacion-usuario {
+    display: grid;
+    gap: 1rem;
+}
+
+.formulario-administracion label,
+.formulario-administracion fieldset {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.formulario-administracion input[type="text"],
+.formulario-administracion input:not([type]) {
+    width: 100%;
+}
+
+.opcion-permiso {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+}
+
+.opcion-permiso span,
+.asignacion-usuario > div:first-of-type {
+    display: grid;
+}
+
+.opcion-permiso small,
+.asignacion-usuario small {
+    color: #68717a;
+}
+
+.asignacion-usuario {
+    grid-template-columns: minmax(140px, 0.8fr) minmax(220px, 1.5fr) auto;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e1e5e8;
+}
+
+.roles-usuario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+}
+
+.cambio-password {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.cambio-password input {
+    min-width: 150px;
+}
+
+.alerta {
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+}
+
+.alerta-success { background: #dff3e7; color: #155c36; }
+.alerta-danger { background: #f8dddd; color: #7e2020; }
+
+.tabla-actividad-contenedor {
+    margin: 2rem 0;
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-actividad {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-actividad th,
+.tabla-actividad td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid #e1e5e8;
+}
+
+.tabla-actividad th {
+    color: #fff;
+    background: #18364f;
+}
+
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+@media (max-width: 800px) {
+    .panel-administracion { grid-template-columns: 1fr; }
+    .asignacion-usuario { grid-template-columns: 1fr; }
 }
 
 .control-produccion {

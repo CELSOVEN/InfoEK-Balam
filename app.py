@@ -1,17 +1,31 @@
 import os
 import re
+import secrets
+import time
+from datetime import datetime, timedelta, timezone
+from functools import wraps
 
-from models import Contenido, Pozo, ProduccionPozoMensual, Usuario
+from models import (
+    Contenido,
+    Permiso,
+    Pozo,
+    ProduccionPozoMensual,
+    Rol,
+    SesionNavegacion,
+    Usuario,
+)
 from contenido_inicial import CONTENIDOS_INICIALES
 from datos_pozos import POZOS_INICIALES
 
 from flask import (
     Flask,
+    abort,
     flash,
     redirect,
     render_template,
     request,
     send_from_directory,
+    session,
     url_for,
 )
 from flask_login import (
@@ -29,6 +43,24 @@ from database import db
 app = Flask(__name__)
 app.config.from_object(Config)
 
+PERMISOS_INICIALES = {
+    "biblioteca.ver": (
+        "Consultar biblioteca",
+        "Permite listar y visualizar los PDF sin mostrar la opción de descarga.",
+    ),
+    "biblioteca.descargar": (
+        "Descargar biblioteca",
+        "Permite descargar y guardar los documentos PDF de la biblioteca.",
+    ),
+    "produccion.ver": (
+        "Consultar producción",
+        "Permite consultar el histórico y la API de producción.",
+    ),
+    "usuarios.administrar": (
+        "Administrar usuarios y roles",
+        "Permite crear roles y asignarlos a los usuarios.",
+    ),
+}
 
 PLATAFORMAS_BUSQUEDA = {
     "EK-A": {
@@ -373,6 +405,53 @@ def cargar_pozos_iniciales():
     db.session.commit()
 
 
+def cargar_roles_y_permisos_iniciales():
+    permisos = {}
+    for codigo, (nombre, descripcion) in PERMISOS_INICIALES.items():
+        permiso = Permiso.query.filter_by(codigo=codigo).first()
+        if permiso is None:
+            permiso = Permiso(codigo=codigo)
+            db.session.add(permiso)
+        permiso.nombre = nombre
+        permiso.descripcion = descripcion
+        permisos[codigo] = permiso
+
+    administrador = Rol.query.filter_by(nombre="Administrador").first()
+    if administrador is None:
+        administrador = Rol(nombre="Administrador", es_sistema=True)
+        db.session.add(administrador)
+    administrador.descripcion = "Acceso completo a todas las características."
+    administrador.permisos = list(permisos.values())
+
+    lector = Rol.query.filter_by(nombre="Lector").first()
+    if lector is None:
+        lector = Rol(nombre="Lector", es_sistema=True)
+        db.session.add(lector)
+    lector.descripcion = "Acceso de consulta, incluida la biblioteca."
+    lector.permisos = [
+        permisos["biblioteca.ver"],
+        permisos["produccion.ver"],
+    ]
+
+    basico = Rol.query.filter_by(nombre="Básico").first()
+    if basico is None:
+        basico = Rol(nombre="Básico", es_sistema=True)
+        db.session.add(basico)
+    basico.descripcion = "Acceso al portal sin biblioteca ni producción."
+    basico.permisos = []
+
+    db.session.flush()
+    admin_username = os.environ.get("ADMIN_USERNAME", "admin")
+    for usuario in Usuario.query.all():
+        if usuario.username == admin_username:
+            if administrador not in usuario.roles:
+                usuario.roles.append(administrador)
+        elif not usuario.roles:
+            # Conserva el acceso que tenían antes de incorporar RBAC.
+            usuario.roles.append(lector)
+    db.session.commit()
+
+
 db.init_app(app)
 
 with app.app_context():
@@ -388,6 +467,7 @@ with app.app_context():
         db.session.commit()
     cargar_contenidos_iniciales()
     cargar_pozos_iniciales()
+    cargar_roles_y_permisos_iniciales()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -398,12 +478,67 @@ login_manager.login_message = (
 login_manager.login_message_category = "warning"
 
 
+@app.template_filter("fecha_local")
+def fecha_local(fecha):
+    if fecha is None:
+        return "—"
+    fecha_utc = fecha.replace(tzinfo=timezone.utc)
+    return fecha_utc.astimezone(
+        timezone(timedelta(hours=-6))
+    ).strftime("%d/%m/%Y %H:%M:%S")
+
+
+@app.template_filter("duracion_legible")
+def duracion_legible(segundos):
+    horas, resto = divmod(int(segundos), 3600)
+    minutos, segundos = divmod(resto, 60)
+    if horas:
+        return f"{horas} h {minutos} min {segundos} s"
+    if minutos:
+        return f"{minutos} min {segundos} s"
+    return f"{segundos} s"
+
+
 @login_manager.user_loader
 def cargar_usuario(usuario_id):
     return db.session.get(
         Usuario,
         int(usuario_id)
     )
+
+
+def permiso_requerido(codigo):
+    def decorador(vista):
+        @wraps(vista)
+        @login_required
+        def vista_protegida(*args, **kwargs):
+            if not current_user.tiene_permiso(codigo):
+                abort(403)
+            return vista(*args, **kwargs)
+
+        return vista_protegida
+
+    return decorador
+
+
+@app.before_request
+def registrar_actividad_usuario():
+    if not current_user.is_authenticated:
+        return
+    registro_id = session.get("registro_acceso_id")
+    if not registro_id:
+        return
+
+    ahora_epoch = time.time()
+    ultima_actualizacion = session.get("registro_actividad_epoch", 0)
+    if ahora_epoch - ultima_actualizacion < 60:
+        return
+
+    registro = db.session.get(SesionNavegacion, registro_id)
+    if registro and registro.usuario_id == current_user.id and not registro.fecha_salida:
+        registro.ultima_actividad = datetime.utcnow()
+        db.session.commit()
+        session["registro_actividad_epoch"] = ahora_epoch
 
 
 @app.route("/")
@@ -445,6 +580,16 @@ def login():
             and usuario.activo
         ):
             login_user(usuario)
+            ahora = datetime.utcnow()
+            registro = SesionNavegacion(
+                usuario=usuario,
+                fecha_ingreso=ahora,
+                ultima_actividad=ahora,
+            )
+            db.session.add(registro)
+            db.session.commit()
+            session["registro_acceso_id"] = registro.id
+            session["registro_actividad_epoch"] = time.time()
             return redirect(url_for("portal"))
 
         flash(
@@ -465,10 +610,10 @@ def portal():
         .all()
     )
 
-    carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
     documentos_biblioteca = []
-
-    if os.path.isdir(carpeta_biblioteca):
+    puede_ver_biblioteca = current_user.tiene_permiso("biblioteca.ver")
+    carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
+    if puede_ver_biblioteca and os.path.isdir(carpeta_biblioteca):
         documentos_biblioteca = sorted(
             archivo
             for archivo in os.listdir(carpeta_biblioteca)
@@ -488,6 +633,10 @@ def portal():
         "portal.html",
         contenidos=contenidos,
         documentos_biblioteca=documentos_biblioteca,
+        puede_ver_biblioteca=puede_ver_biblioteca,
+        puede_descargar_biblioteca=current_user.tiene_permiso(
+            "biblioteca.descargar"
+        ),
         pozos_por_plataforma=pozos_por_plataforma,
         imagenes_por_plataforma=imagenes_por_plataforma,
         historiales_por_plataforma=historiales_por_plataforma,
@@ -502,19 +651,52 @@ def portal():
 
 
 @app.route("/biblioteca/<path:nombre_archivo>")
-@login_required
+@permiso_requerido("biblioteca.ver")
 def ver_documento_biblioteca(nombre_archivo):
+    if not nombre_archivo.lower().endswith(".pdf"):
+        abort(404)
+
+    return render_template(
+        "visor_biblioteca.html",
+        nombre_archivo=nombre_archivo,
+        puede_descargar=current_user.tiene_permiso("biblioteca.descargar"),
+    )
+
+
+@app.route("/biblioteca/visualizar-archivo/<path:nombre_archivo>")
+@permiso_requerido("biblioteca.ver")
+def archivo_biblioteca_visualizacion(nombre_archivo):
+    if not nombre_archivo.lower().endswith(".pdf"):
+        abort(404)
     carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
 
-    return send_from_directory(
+    respuesta = send_from_directory(
         carpeta_biblioteca,
         nombre_archivo,
         as_attachment=False,
     )
+    respuesta.headers["Cache-Control"] = "no-store, private, max-age=0"
+    respuesta.headers["Pragma"] = "no-cache"
+    respuesta.headers["X-Content-Type-Options"] = "nosniff"
+    return respuesta
+
+
+@app.route("/biblioteca/descargar/<path:nombre_archivo>")
+@permiso_requerido("biblioteca.descargar")
+def descargar_documento_biblioteca(nombre_archivo):
+    if not nombre_archivo.lower().endswith(".pdf"):
+        abort(404)
+    carpeta_biblioteca = os.path.join(app.root_path, "Biblioteca")
+    return send_from_directory(
+        carpeta_biblioteca,
+        nombre_archivo,
+        as_attachment=True,
+        download_name=os.path.basename(nombre_archivo),
+    )
 
 
 @app.route("/produccion/historica")
-@login_required
+@permiso_requerido("produccion.ver")
 def produccion_historica():
     return render_template(
         "produccion_historica.html",
@@ -639,7 +821,7 @@ def buscar():
 
 
 @app.route("/api/produccion")
-@login_required
+@permiso_requerido("produccion.ver")
 def api_produccion():
     nivel = request.args.get("nivel", "campo")
     intervalo = request.args.get("intervalo", "semestre")
@@ -845,9 +1027,145 @@ def api_produccion():
     }
 
 
+@app.route("/administracion/roles", methods=["GET", "POST"])
+@permiso_requerido("usuarios.administrar")
+def administrar_roles():
+    token_csrf = session.setdefault("token_csrf", secrets.token_urlsafe(32))
+    if request.method == "POST":
+        if not secrets.compare_digest(
+            request.form.get("token_csrf", ""),
+            token_csrf,
+        ):
+            abort(400)
+        accion = request.form.get("accion")
+        if accion == "crear_usuario":
+            username = request.form.get("username", "").strip()
+            nombre_persona = request.form.get("nombre_persona", "").strip()
+            password = request.form.get("password", "")
+            confirmar_password = request.form.get("confirmar_password", "")
+            usuario_existente = Usuario.query.filter(
+                db.func.lower(Usuario.username) == username.lower()
+            ).first()
+
+            if not re.fullmatch(r"[A-Za-z0-9._-]{3,50}", username):
+                flash(
+                    "El usuario debe tener entre 3 y 50 caracteres y solo puede "
+                    "incluir letras, números, punto, guion o guion bajo.",
+                    "danger",
+                )
+            elif not nombre_persona:
+                flash("El nombre de la persona es obligatorio.", "danger")
+            elif usuario_existente:
+                flash("Ese nombre de usuario ya está registrado.", "danger")
+            elif len(password) < 8:
+                flash("La contraseña debe tener al menos 8 caracteres.", "danger")
+            elif password != confirmar_password:
+                flash("Las contraseñas no coinciden.", "danger")
+            else:
+                ids_roles = request.form.getlist("roles", type=int)
+                roles_seleccionados = Rol.query.filter(
+                    Rol.id.in_(ids_roles)
+                ).all()
+                if not roles_seleccionados:
+                    rol_basico = Rol.query.filter_by(nombre="Básico").first()
+                    roles_seleccionados = [rol_basico] if rol_basico else []
+
+                usuario = Usuario(
+                    username=username,
+                    nombre=nombre_persona,
+                    roles=roles_seleccionados,
+                )
+                usuario.establecer_password(password)
+                db.session.add(usuario)
+                db.session.commit()
+                flash(f"Usuario {nombre_persona} creado correctamente.", "success")
+                return redirect(url_for("administrar_roles"))
+        elif accion == "crear_rol":
+            nombre = request.form.get("nombre", "").strip()
+            if not nombre:
+                flash("El nombre del rol es obligatorio.", "danger")
+            elif Rol.query.filter(db.func.lower(Rol.nombre) == nombre.lower()).first():
+                flash("Ya existe un rol con ese nombre.", "danger")
+            else:
+                codigos = request.form.getlist("permisos")
+                rol = Rol(
+                    nombre=nombre,
+                    descripcion=request.form.get("descripcion", "").strip() or None,
+                    permisos=Permiso.query.filter(Permiso.codigo.in_(codigos)).all(),
+                )
+                db.session.add(rol)
+                db.session.commit()
+                flash("Rol creado correctamente.", "success")
+                return redirect(url_for("administrar_roles"))
+        elif accion == "actualizar_usuario":
+            usuario = db.session.get(Usuario, request.form.get("usuario_id", type=int))
+            if usuario is None:
+                abort(404)
+            ids_roles = request.form.getlist("roles", type=int)
+            roles_seleccionados = Rol.query.filter(Rol.id.in_(ids_roles)).all()
+            conserva_administracion = any(
+                permiso.codigo == "usuarios.administrar"
+                for rol in roles_seleccionados
+                for permiso in rol.permisos
+            )
+            if usuario.id == current_user.id and not conserva_administracion:
+                flash(
+                    "No puedes quitarte tu propio permiso de administración.",
+                    "danger",
+                )
+                return redirect(url_for("administrar_roles"))
+            password_nuevo = request.form.get("password_nuevo", "")
+            if password_nuevo and len(password_nuevo) < 8:
+                flash(
+                    "La nueva contraseña debe tener al menos 8 caracteres.",
+                    "danger",
+                )
+                return redirect(url_for("administrar_roles"))
+            usuario.roles = roles_seleccionados
+            if password_nuevo:
+                usuario.establecer_password(password_nuevo)
+            db.session.commit()
+            flash(f"Cuenta de {usuario.nombre} actualizada.", "success")
+            return redirect(url_for("administrar_roles"))
+
+    return render_template(
+        "administrar_roles.html",
+        usuarios=Usuario.query.order_by(Usuario.nombre).all(),
+        roles=Rol.query.order_by(Rol.nombre).all(),
+        permisos=Permiso.query.order_by(Permiso.nombre).all(),
+        token_csrf=token_csrf,
+    )
+
+
+@app.route("/administracion/actividad")
+@permiso_requerido("usuarios.administrar")
+def actividad_usuarios():
+    pagina = max(request.args.get("pagina", 1, type=int), 1)
+    paginacion = (
+        SesionNavegacion.query
+        .join(Usuario)
+        .order_by(SesionNavegacion.fecha_ingreso.desc())
+        .paginate(page=pagina, per_page=50, error_out=False)
+    )
+    return render_template(
+        "actividad_usuarios.html",
+        paginacion=paginacion,
+        sesiones=paginacion.items,
+    )
+
+
 @app.route("/logout")
 @login_required
 def logout():
+    registro_id = session.pop("registro_acceso_id", None)
+    session.pop("registro_actividad_epoch", None)
+    if registro_id:
+        registro = db.session.get(SesionNavegacion, registro_id)
+        if registro and registro.usuario_id == current_user.id and not registro.fecha_salida:
+            ahora = datetime.utcnow()
+            registro.ultima_actividad = ahora
+            registro.fecha_salida = ahora
+            db.session.commit()
     logout_user()
 
     flash(
@@ -860,6 +1178,11 @@ def logout():
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template("404.html"), 404
+
+
+@app.errorhandler(403)
+def acceso_denegado(error):
+    return render_template("403.html"), 403
 
 
 @app.errorhandler(500)
