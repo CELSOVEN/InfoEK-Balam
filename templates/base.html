@@ -99,9 +99,6 @@
         <a href="#">
             Buscar
         </a>
-        <a href="#">
-            ES | EN
-        </a>
         {% if current_user.is_authenticated and current_user.tiene_permiso('usuarios.administrar') %}
         <a href="{{ url_for('administrar_roles') }}">
             Roles
@@ -121,9 +118,6 @@
         Buscar
     </a>
 
-    <a href="#">
-        ES | EN
-    </a>
     {% if current_user.is_authenticated and current_user.tiene_permiso('usuarios.administrar') %}
     <a href="{{ url_for('administrar_roles') }}">
         Roles
