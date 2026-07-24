@@ -11,7 +11,7 @@ services:
       - key: FLASK_DEBUG
         value: "False"
       - key: ADMIN_USERNAME
-        value: admin
+        value: administrator
       - key: ADMIN_NAME
         value: Administrador
       - key: ADMIN_PASSWORD

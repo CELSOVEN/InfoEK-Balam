@@ -96,12 +96,12 @@ class Usuario(UserMixin, db.Model):
     )
 
     def establecer_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password.casefold())
 
     def verificar_password(self, password):
         return check_password_hash(
             self.password_hash,
-            password
+            password.casefold()
         )
 
     def tiene_permiso(self, codigo):

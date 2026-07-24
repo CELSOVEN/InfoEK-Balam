@@ -446,7 +446,7 @@ def cargar_roles_y_permisos_iniciales():
     ]
 
     db.session.flush()
-    admin_username = os.environ.get("ADMIN_USERNAME", "admin")
+    admin_username = os.environ.get("ADMIN_USERNAME", "administrator")
     for usuario in Usuario.query.all():
         if usuario.username == admin_username:
             if administrador not in usuario.roles:

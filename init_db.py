@@ -16,7 +16,7 @@ def crear_usuario_administrador():
 
     admin_username = os.environ.get(
         "ADMIN_USERNAME",
-        "admin"
+        "administrator"
     )
 
     admin_name = os.environ.get(
