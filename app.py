@@ -1106,6 +1106,29 @@ def administrar_roles():
             usuario = db.session.get(Usuario, request.form.get("usuario_id", type=int))
             if usuario is None:
                 abort(404)
+            username = request.form.get("username", "").strip()
+            nombre_persona = request.form.get("nombre_persona", "").strip()
+            usuario_existente = Usuario.query.filter(
+                db.func.lower(Usuario.username) == username.lower(),
+                Usuario.id != usuario.id,
+            ).first()
+            if not re.fullmatch(r"[A-Za-z0-9._-]{3,50}", username):
+                flash(
+                    "El usuario debe tener entre 3 y 50 caracteres y solo puede "
+                    "incluir letras, números, punto, guion o guion bajo.",
+                    "danger",
+                )
+                return redirect(url_for("administrar_roles"))
+            if not nombre_persona or len(nombre_persona) > 100:
+                flash(
+                    "El nombre de la persona es obligatorio y puede tener "
+                    "hasta 100 caracteres.",
+                    "danger",
+                )
+                return redirect(url_for("administrar_roles"))
+            if usuario_existente:
+                flash("Ese nombre de usuario ya está registrado.", "danger")
+                return redirect(url_for("administrar_roles"))
             ids_roles = request.form.getlist("roles", type=int)
             roles_seleccionados = Rol.query.filter(Rol.id.in_(ids_roles)).all()
             conserva_administracion = any(
@@ -1126,6 +1149,8 @@ def administrar_roles():
                     "danger",
                 )
                 return redirect(url_for("administrar_roles"))
+            usuario.username = username
+            usuario.nombre = nombre_persona
             usuario.roles = roles_seleccionados
             if password_nuevo:
                 usuario.establecer_password(password_nuevo)

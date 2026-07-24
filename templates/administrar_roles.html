@@ -106,9 +106,28 @@
             <input type="hidden" name="accion" value="actualizar_usuario">
             <input type="hidden" name="token_csrf" value="{{ token_csrf }}">
             <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
-            <div>
-                <strong>{{ usuario.nombre }}</strong>
-                <small>@{{ usuario.username }}</small>
+            <div class="datos-usuario">
+                <label>
+                    Nombre
+                    <input
+                        name="nombre_persona"
+                        value="{{ usuario.nombre }}"
+                        maxlength="100"
+                        required
+                    >
+                </label>
+                <label>
+                    Usuario
+                    <input
+                        name="username"
+                        value="{{ usuario.username }}"
+                        minlength="3"
+                        maxlength="50"
+                        pattern="[A-Za-z0-9._-]+"
+                        autocomplete="off"
+                        required
+                    >
+                </label>
             </div>
             <div class="roles-usuario">
                 {% for rol in roles %}
