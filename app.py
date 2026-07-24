@@ -1062,8 +1062,8 @@ def administrar_roles():
                 flash("El nombre de la persona es obligatorio.", "danger")
             elif usuario_existente:
                 flash("Ese nombre de usuario ya está registrado.", "danger")
-            elif len(password) < 8:
-                flash("La contraseña debe tener al menos 8 caracteres.", "danger")
+            elif len(password) < 3:
+                flash("La contraseña debe tener al menos 3 caracteres.", "danger")
             elif password != confirmar_password:
                 flash("Las contraseñas no coinciden.", "danger")
             else:
@@ -1120,9 +1120,9 @@ def administrar_roles():
                 )
                 return redirect(url_for("administrar_roles"))
             password_nuevo = request.form.get("password_nuevo", "")
-            if password_nuevo and len(password_nuevo) < 8:
+            if password_nuevo and len(password_nuevo) < 3:
                 flash(
-                    "La nueva contraseña debe tener al menos 8 caracteres.",
+                    "La nueva contraseña debe tener al menos 3 caracteres.",
                     "danger",
                 )
                 return redirect(url_for("administrar_roles"))
