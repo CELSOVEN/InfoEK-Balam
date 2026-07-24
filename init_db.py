@@ -19,27 +19,16 @@ def crear_usuario_administrador():
         "admin"
     )
 
-    admin_password = os.environ.get(
-        "ADMIN_PASSWORD"
-    )
-
     admin_name = os.environ.get(
         "ADMIN_NAME",
         "Administrador"
     )
-
-    if not admin_password:
-        raise RuntimeError(
-            "La variable ADMIN_PASSWORD no está configurada."
-        )
 
     usuario = Usuario.query.filter_by(
         username=admin_username
     ).first()
 
     if usuario:
-
-        usuario.establecer_password(admin_password)
         rol_administrador = Rol.query.filter_by(nombre="Administrador").first()
         if rol_administrador and rol_administrador not in usuario.roles:
             usuario.roles.append(rol_administrador)
@@ -47,10 +36,20 @@ def crear_usuario_administrador():
         db.session.commit()
 
         print(
-            "[OK] Contraseña del administrador actualizada."
+            "[OK] El usuario administrador ya existe; "
+            "se conserva su contraseña."
         )
 
         return
+
+    admin_password = os.environ.get(
+        "ADMIN_PASSWORD"
+    )
+
+    if not admin_password:
+        raise RuntimeError(
+            "La variable ADMIN_PASSWORD no está configurada."
+        )
 
     usuario = Usuario(
         username=admin_username,
